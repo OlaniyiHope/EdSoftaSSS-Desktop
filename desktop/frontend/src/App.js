@@ -23,6 +23,7 @@ import AllNoti from "./pages/AllNoti";
 import History from "./pages/History";
 import ResultHistory from "./pages/ResultHistory";
 import BreakHistory from "./pages/BreakHistory";
+import Activate from "./pages/Activate";
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="/result-history" element={<ResultHistory />} />
           <Route path="/result-history-breakdown" element={<BreakHistory />} />
           <Route path="/history" element={<History />} />
+          <Route path="/activate" element={<Activate />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Services />} />
           <Route path="/download" element={<Download />} />
