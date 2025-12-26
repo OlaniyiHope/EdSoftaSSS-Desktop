@@ -21,6 +21,8 @@ import Study from "./pages/Study";
 import Notification from "./pages/Notification";
 import AllNoti from "./pages/AllNoti";
 import History from "./pages/History";
+import ResultHistory from "./pages/ResultHistory";
+import BreakHistory from "./pages/BreakHistory";
 
 const App = () => {
   return (
@@ -39,6 +41,8 @@ const App = () => {
           <Route path="/practice-for-utme" element={<All />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/all-notification" element={<AllNoti />} />
+          <Route path="/result-history" element={<ResultHistory />} />
+          <Route path="/result-history-breakdown" element={<BreakHistory />} />
           <Route path="/history" element={<History />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Services />} />
