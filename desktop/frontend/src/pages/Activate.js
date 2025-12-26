@@ -77,6 +77,51 @@ const Activate = () => {
               </button>
             </div>
           )}
+          {/* FORM */}
+{activeTab === "pin" && (
+  <div className="activate-form">
+    <p className="activate-info">
+      Create a new temporary profile for an additional user.
+      Guest accounts can be edited by the owner's account only.
+    </p>
+
+  
+      <label>Enter PIN</label>
+      <input type="text" placeholder="Enter PIN" />
+  
+
+   
+      <label>Phone Number</label>
+      <input type="text" placeholder="Enter phone number" />
+  
+
+    <button className="activate-btn">
+      Generate Activation Key
+    </button>
+  </div>
+)}
+{/* I WANT TO BUY */}
+{activeTab === "buy" && (
+  <div className="buy-options">
+
+    <button className="buy-option">
+      <span>Buy with ATM Card</span>
+      <span className="arrow">→</span>
+    </button>
+
+    <button className="buy-option">
+      <span>Buy from Sales Point</span>
+      <span className="arrow">→</span>
+    </button>
+
+    <button className="buy-option">
+      <span>Pay in the Bank</span>
+      <span className="arrow">→</span>
+    </button>
+
+  </div>
+)}
+
         </section>
       </main>
     </div>
