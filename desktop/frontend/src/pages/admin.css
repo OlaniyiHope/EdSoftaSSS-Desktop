@@ -1397,3 +1397,59 @@ body {
   display: flex;
   justify-content: space-between;
 }
+/* ACTIVATE PAGE */
+.activate-container {
+  max-width: 600px;
+  margin-top: 40px;
+}
+
+.activate-tabs {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #666;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #000;
+  border-bottom: 2px solid #1a73e8;
+}
+
+.activate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.activate-form label {
+  font-size: 14px;
+  color: #555;
+}
+
+.activate-form input {
+  height: 48px;
+  border-radius: 10px;
+  border: none;
+  background: #f2f2f2;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.activate-btn {
+  width: fit-content;
+  padding: 12px 32px;
+  background: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}

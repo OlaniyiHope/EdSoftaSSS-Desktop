@@ -1,0 +1,86 @@
+import { useState } from "react";
+import {
+  FaBell,
+  FaCog,
+  FaHome,
+  FaNewspaper,
+  FaStickyNote
+} from "react-icons/fa";
+import AddUser from "./AddUser";
+import "./admin.css";
+
+const Activate = () => {
+  const [activeTab, setActiveTab] = useState("key");
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <div className="dashboard">
+      {/* SIDEBAR */}
+      <aside className="sidebar">
+        <div className="profile">
+          <div className="avatar" />
+          <div className="bell">
+            <FaBell />
+            <span className="badge">23</span>
+          </div>
+        </div>
+
+        <nav>
+          <button className="active"><FaHome /> Home</button>
+          <button><FaStickyNote /> Notes</button>
+          <button><FaNewspaper /> News</button>
+          <button><FaCog /> Settings</button>
+        </nav>
+
+        <AddUser open={showModal} onClose={() => setShowModal(false)} />
+      </aside>
+
+      {/* MAIN */}
+      <main className="bodys">
+        <header className="headers">
+          <h1>Activate App</h1>
+        </header>
+
+        <section className="activate-container">
+          {/* TABS */}
+          <div className="activate-tabs">
+            <button
+              className={activeTab === "pin" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("pin")}
+            >
+              I Have a PIN
+            </button>
+
+            <button
+              className={activeTab === "key" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("key")}
+            >
+              I Have a Activation Key
+            </button>
+
+            <button
+              className={activeTab === "buy" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("buy")}
+            >
+              I Want to Buy
+            </button>
+          </div>
+
+          {/* FORM */}
+          {activeTab === "key" && (
+            <div className="activate-form">
+              <label>Enter Activation Key</label>
+              <input type="text" placeholder="" />
+
+              <button className="activate-btn">
+                Generate Activation Key
+              </button>
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default Activate;
