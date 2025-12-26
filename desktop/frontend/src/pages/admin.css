@@ -1504,3 +1504,59 @@ body {
   font-size: 15px;
   color: #000;
 }
+/* PRACTICE BY TOPIC */
+.topic-container {
+  max-width: 500px;
+  margin-top: 30px;
+}
+
+/* Add subject button */
+.add-subject-btn {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+
+/* Subject list */
+.subject-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+/* Each subject */
+.subject-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f2f2f2;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.subject-item input {
+  width: 16px;
+  height: 16px;
+}
+
+/* Start test button */
+.start-test-btn {
+  width: 100%;
+  padding: 14px;
+  background: #0366D6;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}

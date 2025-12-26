@@ -25,6 +25,7 @@ import ResultHistory from "./pages/ResultHistory";
 import BreakHistory from "./pages/BreakHistory";
 import Activate from "./pages/Activate";
 import Payment from "./pages/Payment";
+import Topic from "./pages/Topic";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/history" element={<History />} />
           <Route path="/activate" element={<Activate />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/topic" element={<Topic />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Services />} />
           <Route path="/download" element={<Download />} />
