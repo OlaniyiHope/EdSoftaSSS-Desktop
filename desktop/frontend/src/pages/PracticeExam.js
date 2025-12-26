@@ -28,7 +28,12 @@ const [minutes, setMinutes] = useState(0);
 const toggleTerm = (term) => {
   setOpenTerm(openTerm === term ? null : term);
 };
+  const [selected, setSelected] = useState("");
 
+  const handleClick = (type) => {
+    setSelected(type);
+    console.log("Selected practice type:", type);
+  };
 
  return (
   <div className="dashboard">
@@ -156,14 +161,62 @@ const toggleTerm = (term) => {
     {/* RIGHT — 20% */}
     <aside className="practice-right">
       <div className="practice-filter">
-        <h4>Practice Type</h4>
+        <h4> Select Practice Type</h4>
+<div>
 
-        <select>
-          <option value="">Select practice mode</option>
-          <option value="topic">Practice by Topic</option>
-          <option value="year">Practice by Year</option>
-          <option value="mixed">Mixed Practice</option>
+     <h5> Select Exam Type</h5>
+    <select>
+       
+          <option value="">Objectives</option>
+          <option value="topic">Theory</option>
+          <option value="year">Fill in the gap</option>
+          <option value="mixed">Blank</option>
         </select>
+</div>
+    
+ <div>
+      <p>
+        1. Select subjects, number of questions and topics of your choice to properly revise areas in a particular subject.
+      </p>
+
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <button
+          onClick={() => handleClick("Practice by Topic")}
+          className={selected === "Practice by Topic" ? "active-btn" : ""}
+        >
+          Practice by Topic
+        </button>
+        <button
+          onClick={() => handleClick("Theory")}
+          className={selected === "Theory" ? "active-btn" : ""}
+        >
+          Theory
+        </button>
+        <button
+          onClick={() => handleClick("Fill in the gap")}
+          className={selected === "Fill in the gap" ? "active-btn" : ""}
+        >
+          Fill in the gap
+        </button>
+        <button
+          onClick={() => handleClick("Blank")}
+          className={selected === "Blank" ? "active-btn" : ""}
+        >
+          Blank
+        </button>
+      </div>
+
+
+<p>2. Select subjects, number and year of previous questions of your choice. </p>
+    <select>
+       
+          <option value="">Practice by Topic</option>
+          <option value="topic">Theory</option>
+          <option value="year">Fill in the gap</option>
+          <option value="mixed">Blank</option>
+        </select>
+</div>
+    
       </div>
     </aside>
 

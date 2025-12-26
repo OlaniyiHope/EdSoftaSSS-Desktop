@@ -1207,3 +1207,70 @@ body {
   font-size: 36px;
   margin: 0 10px;
 }
+
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-btn {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notifications-list {
+  margin-top: 20px;
+  max-width: 700px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  background: #dbeafe;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 20px;
+  margin-right: 16px;
+}
+
+.notification-content h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.notification-content p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.notification-content span {
+  font-size: 12px;
+  color: #888;
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}

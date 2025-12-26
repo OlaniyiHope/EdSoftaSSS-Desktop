@@ -18,6 +18,8 @@ import Recommend from "./pages/Recommend";
 import Register from "./pages/Register";
 import Services from "./pages/Services";
 import Study from "./pages/Study";
+import Notification from "./pages/Notification";
+import AllNoti from "./pages/AllNoti";
 
 const App = () => {
   return (
@@ -34,6 +36,8 @@ const App = () => {
           <Route path="/practice-exam" element={<PracticeExam />} />
           <Route path="/dashboards" element={<AdminDashboard />} />
           <Route path="/practice-for-utme" element={<All />} />
+          <Route path="/notification" element={<Notification />} />
+          <Route path="/all-notification" element={<AllNoti />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Services />} />
           <Route path="/download" element={<Download />} />
