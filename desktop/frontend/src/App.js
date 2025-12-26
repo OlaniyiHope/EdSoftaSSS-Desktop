@@ -24,7 +24,7 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Cbt />} />
+          <Route path="/cbt" element={<Cbt />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/recommendation" element={<Recommend />} />
           <Route path="/ask" element={<Ask />} />
@@ -40,7 +40,7 @@ const App = () => {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/start-exam" element={<Exam />} />
-          <Route path="/" element={<Cbt />} />
+          <Route path="/cbt" element={<Cbt />} />
           <Route path="/question" element={<Question />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
