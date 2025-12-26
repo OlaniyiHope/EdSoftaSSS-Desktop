@@ -1453,3 +1453,54 @@ body {
   font-size: 14px;
   cursor: pointer;
 }
+.buy-input {
+  width: 100%;
+  height: 48px;               /* SAME as input */
+  padding: 0 16px;            /* SAME as input */
+  background: #f2f2f2;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.buy-input:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.buy-input:hover {
+  background: #e9e9e9;
+}
+
+.buy-input .arrow {
+  font-size: 16px;
+  color: #1a73e8;
+}
+.payment-container {
+  max-width: 600px;
+  margin-top: 40px;
+}
+
+.payment-section {
+  margin-bottom: 32px;
+}
+
+.payment-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.payment-section p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.price-text {
+  font-size: 15px;
+  color: #000;
+}

@@ -102,25 +102,26 @@ const Activate = () => {
 )}
 {/* I WANT TO BUY */}
 {activeTab === "buy" && (
-  <div className="buy-options">
+  <div className="activate-form">
 
-    <button className="buy-option">
+    <button className="buy-input">
       <span>Buy with ATM Card</span>
       <span className="arrow">→</span>
     </button>
 
-    <button className="buy-option">
+    <button className="buy-input">
       <span>Buy from Sales Point</span>
       <span className="arrow">→</span>
     </button>
 
-    <button className="buy-option">
+    <button className="buy-input">
       <span>Pay in the Bank</span>
       <span className="arrow">→</span>
     </button>
 
   </div>
 )}
+
 
         </section>
       </main>
