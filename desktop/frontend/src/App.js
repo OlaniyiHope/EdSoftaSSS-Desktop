@@ -20,6 +20,7 @@ import Services from "./pages/Services";
 import Study from "./pages/Study";
 import Notification from "./pages/Notification";
 import AllNoti from "./pages/AllNoti";
+import History from "./pages/History";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/practice-for-utme" element={<All />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/all-notification" element={<AllNoti />} />
+          <Route path="/history" element={<History />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Services />} />
           <Route path="/download" element={<Download />} />

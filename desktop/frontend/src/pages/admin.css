@@ -1274,3 +1274,15 @@ body {
   text-align: center;
   color: #888;
 }
+/* Button tweak for contrast */
+.start-practice-btn {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background-color: #0366D6;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}

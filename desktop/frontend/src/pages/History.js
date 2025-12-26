@@ -1,116 +1,103 @@
-import { FaBell, FaCog, FaHome, FaNewspaper, FaStickyNote } from "react-icons/fa";
-import { MdDownload, MdLightbulb } from "react-icons/md";
+
 import { useState } from "react";
+
+import {
+    FaBell,
+    FaCog,
+    FaHome,
+    FaNewspaper,
+    FaStickyNote
+} from "react-icons/fa";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import useAuth from "../hooks/useAuth";
 import AddUser from "./AddUser";
 import "./admin.css";
-
-const notificationsData = [
-  {
-    id: 1,
-    type: "update",
-    title: "Content update",
-    message: "New topics added",
-    date: "14 Aug, 2020 at 3:34pm",
-    icon: <MdDownload />
-  },
-  {
-    id: 2,
-    type: "practice",
-    title: "Practice recommendations",
-    message: "Improve your surds by taking this test prepared for you!",
-    date: "14 Aug, 2020 at 3:34pm",
-    icon: <MdLightbulb />
-  },
-  {
-    id: 3,
-    type: "practice",
-    title: "Practice recommendations",
-    message: "Improve your surds by taking this test prepared for you!",
-    date: "14 Aug, 2020 at 3:34pm",
-    icon: <MdLightbulb />
-  },
-  {
-    id: 4,
-    type: "practice",
-    title: "Practice recommendations",
-    message: "Improve your surds by taking this test prepared for you!",
-    date: "14 Aug, 2020 at 3:34pm",
-    icon: <MdLightbulb />
-  }
-];
-
+import { useSidebar } from "./SidebarProvider";
 const History = () => {
-  const [notifications, setNotifications] = useState(notificationsData);
+  const { user } = useAuth(); // Access the authenticated user
+  const [points, setPoints] = useState([]);
+  const { isSidebarOpen } = useSidebar(); // use context to get sidebar state
   const [showModal, setShowModal] = useState(false);
 
-  return (
-    <div className="dashboard">
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="profile">
-          <div className="avatar" />
-          <div className="bell">
-            <FaBell />
-            <span className="badge">{notifications.length}</span>
-          </div>
+ return (
+  <div className="dashboard">
+    {/* SIDEBAR — 20% */}
+    <aside className="sidebar">
+      <div className="profile">
+        <div className="avatar" />
+        <div className="bell">
+          <FaBell />
+          <span className="badge">23</span>
         </div>
+      </div>
 
-        <nav>
-          <button className="active">
-            <FaHome /> Home
-          </button>
-          <button>
-            <FaStickyNote /> Notes
-          </button>
-          <button>
-            <FaNewspaper /> News
-          </button>
-          <button>
-            <FaCog /> Settings
-          </button>
-        </nav>
+      <nav>
+        <button className="active">
+          <FaHome /> Home
+        </button>
+        <button>
+          <FaStickyNote /> Notes
+        </button>
+        <button>
+          <FaNewspaper /> News
+        </button>
+        <button>
+          <FaCog /> Settings
+        </button>
+      </nav>
 
-        <AddUser open={showModal} onClose={() => setShowModal(false)} />
-      </aside>
 
-      {/* MAIN */}
-      <main className="bodys">
-        <header className="headers notifications-header">
-          <h1>Notifications</h1>
+<AddUser
+  open={showModal}
+  onClose={() => setShowModal(false)}
+/>
 
-          <button
-            className="clear-btn"
-            onClick={() => setNotifications([])}
-          >
-            Clear all notifications
-          </button>
-        </header>
-
-        {/* NOTIFICATION LIST */}
-        <section className="notifications-list">
-          {notifications.length === 0 ? (
-            <div className="empty-state">
-              <p>No new notifications</p>
-            </div>
-          ) : (
-            notifications.map((item) => (
-              <div key={item.id} className="notification-card">
-                <div className="notification-icon">
-                  {item.icon}
-                </div>
-
-                <div className="notification-content">
-                  <h4>{item.title}</h4>
-                  <p>{item.message}</p>
-                  <span>{item.date}</span>
-                </div>
-              </div>
-            ))
-          )}
-        </section>
-      </main>
+    </aside>
+<main className="bodys">
+  <header className="headers">
+    <div>
+      <h1>Result History</h1>
     </div>
-  );
+  </header>
+
+  {/* FLEX CONTAINER */}
+  <div className="practice-layout">
+
+    {/* LEFT — 60% */}
+{/* LEFT — 60% */}
+{/* LEFT — 60% */}
+<section className="practice-left">
+  <div className="study-intro">
+    <div className="study-icon">📘</div>
+
+    <p className="study-text">
+      No exam has been taken yet
+    </p>
+
+    {/* START PRACTICING BUTTON */}
+    <button
+      className="start-practice-btn"
+      onClick={() => {
+        // navigate to practice page
+        // example: navigate("/practice")
+        console.log("Start Practicing");
+      }}
+    >
+      Start Practicing
+    </button>
+  </div>
+</section>
+
+  </div>
+</main>
+
+
+    
+  </div>
+);
+
 };
 
-export default History;
+export default  History;
