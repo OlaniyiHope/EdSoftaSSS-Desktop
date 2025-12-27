@@ -37,36 +37,43 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const { register } = useAuth();
-  const handleFormSubmit = async (values) => {
-    setLoading(true);
-    try {
-      const response = await register(
-        values.fullname,
-        values.phone,
-        values.username,
-        values.email,
-        values.password
-      );
+const handleFormSubmit = async (values) => {
+  console.log("Submitting registration form with values:", values);
+  setLoading(true);
 
-      if (!response || !response.status) {
-        throw new Error("Invalid response from server.");
-      }
+  try {
+    const response = await register(
+      values.fullname,
+      values.phone,
+      values.username,
+      values.email,
+      values.password
+    );
 
-      if (response.status === 201) {
-        toast.success("Registration successful!");
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
-      } else {
-        toast.error("Registration failed!");
-      }
-    } catch (error) {
-      toast.error("An error occurred during registration.");
-      console.error("Error:", error);
-    } finally {
-      setLoading(false);
+    console.log("Response from Electron main:", response);
+
+    if (!response || !response.status) {
+      throw new Error("Invalid response from server.");
     }
-  };
+
+    if (response.status === 201) {
+      toast.success("Registration successful!");
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 1000);
+    } else if (response.status === 409) {
+      toast.error("Email already exists!");
+    } else {
+      toast.error("Registration failed!");
+    }
+  } catch (error) {
+    toast.error("An error occurred during registration.");
+    console.error("Error during registration:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // const redirectToGoogle = () => {
   //   console.log("Redirecting to Google OAuth...");
@@ -125,84 +132,130 @@ const Register = () => {
 
         {/* RIGHT FORM */}
         <div className="register-right">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleFormSubmit}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-            }) => (
-              <form onSubmit={handleSubmit} className="register-form">
+        <Formik
+  initialValues={initialValues}
+  validationSchema={validationSchema}
+  onSubmit={handleFormSubmit}
+>
+  {({
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+  }) => (
+    <form onSubmit={handleSubmit} className="register-form">
 
-                <div className="form-group">
-                  <label>Firstname</label>
-                  <input
-                    type="text"
-                    name="fullname"
-                    value={values.fullname}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
+      <div className="form-group">
+        <label>Firstname</label>
+        <input
+          type="text"
+          name="fullname"
+          value={values.fullname}
+          onChange={(e) => {
+            console.log("Typing in fullname:", e.target.value);
+            handleChange(e);
+          }}
+          onBlur={(e) => {
+            console.log("Blurred fullname:", e.target.value);
+            handleBlur(e);
+          }}
+        />
+      </div>
 
-                <div className="form-group">
-                  <label>Surname</label>
-                  <input type="text" />
-                </div>
+      <div className="form-group">
+        <label>Surname</label>
+        <input
+          type="text"
+          name="username"
+          value={values.username}
+          onChange={(e) => {
+            console.log("Typing in username:", e.target.value);
+            handleChange(e);
+          }}
+          onBlur={(e) => {
+            console.log("Blurred username:", e.target.value);
+            handleBlur(e);
+          }}
+        />
+      </div>
 
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
+      <div className="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          value={values.email}
+          onChange={(e) => {
+            console.log("Typing in email:", e.target.value);
+            handleChange(e);
+          }}
+          onBlur={(e) => {
+            console.log("Blurred email:", e.target.value);
+            handleBlur(e);
+          }}
+        />
+      </div>
 
-                <div className="form-group">
-                  <label>Phone number</label>
-                  <input
-                    type="text"
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
+      <div className="form-group">
+        <label>Phone number</label>
+        <input
+          type="text"
+          name="phone"
+          value={values.phone}
+          onChange={(e) => {
+            console.log("Typing in phone:", e.target.value);
+            handleChange(e);
+          }}
+          onBlur={(e) => {
+            console.log("Blurred phone:", e.target.value);
+            handleBlur(e);
+          }}
+        />
+      </div>
 
-                <div className="form-group">
-                  <label>Password</label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </div>
+      <div className="form-group">
+        <label>Password</label>
+        <input
+          type={showPassword ? "text" : "password"}
+          name="password"
+          value={values.password}
+          onChange={(e) => {
+            console.log("Typing in password:", e.target.value);
+            handleChange(e);
+          }}
+          onBlur={(e) => {
+            console.log("Blurred password:", e.target.value);
+            handleBlur(e);
+          }}
+        />
+      </div>
 
-                <div className="form-group">
-                  <label>Confirm Password</label>
-                  <input type="password" />
-                </div>
+      <div className="form-group">
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          onChange={(e) => console.log("Typing in confirm password:", e.target.value)}
+          onBlur={(e) => console.log("Blurred confirm password:", e.target.value)}
+        />
+      </div>
 
-                <div className="submit-row">
-                  <button type="submit" disabled={loading}>
-                    {loading ? "Submitting..." : "Submit"}
-                  </button>
-                </div>
+      <div className="submit-row">
+        <button
+          type="submit"
+          disabled={loading}
+          onClick={() => console.log("Submit button clicked")}
+        >
+          {loading ? "Submitting..." : "Submit"}
+        </button>
+      </div>
 
-              </form>
-            )}
-          </Formik>
+    </form>
+  )}
+</Formik>
+
         </div>
 
       </div>

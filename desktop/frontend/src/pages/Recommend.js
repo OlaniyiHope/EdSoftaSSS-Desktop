@@ -38,7 +38,7 @@ const Recommend = () => {
 
 
             <a
-              href="/login"
+              href="/ask"
               className="sasup-hero-started-btn-4 mt-30"
               style={{ backgroundColor: "#0366D6", color: "white" }}
             >

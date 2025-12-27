@@ -5,6 +5,8 @@ const Ask = () => {
   const backgroundStyle = {
     backgroundColor: "#fff",
   };
+
+   console.log("ask page:");
   return (
     <>
 
@@ -38,7 +40,7 @@ const Ask = () => {
 
 
             <a
-              href="/login"
+              href="/register"
               className="sasup-hero-started-btn-4 mt-30"
               style={{ backgroundColor: "#0366D6", color: "white" }}
             >

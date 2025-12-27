@@ -8,10 +8,63 @@ import {
 } from "react-icons/fa";
 import AddUser from "./AddUser";
 import "./admin.css";
+import TopicModal from "./TopicModal";
 
 const Topic = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
+
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [subjectTopics, setSubjectTopics] = useState({});
+  const [subjectsState, setSubjectsState] = useState({});
+
+  const handleSubjectClick = (subject) => {
+    setSelectedSubject(subject);
+    setShowModal(true);
+  };
+  const SUBJECT_TOPICS = {
+  Mathematics: ["Algebra", "Geometry", "Trigonometry", "Statistics"],
+  "English Language": ["Comprehension", "Grammar", "Vocabulary"],
+  Physics: ["Motion", "Energy", "Waves", "Electricity"],
+  Chemistry: ["Acids & Bases", "Periodic Table", "Organic Chemistry"],
+  Biology: ["Cell Biology", "Genetics", "Ecology"],
+  Economics: ["Demand & Supply", "Inflation", "Market Structures"],
+  Government: ["Constitution", "Democracy", "Political Parties"],
+  Literature: ["Drama", "Poetry", "Prose"]
+};
+
+
+//   const handleSubmitTopics = (subject, topics) => {
+//     setSubjectTopics({ ...subjectTopics, [subject]: topics });
+//     console.log("Selected topics for", subject, topics);
+//   };
+  const toggleSubject = (subject) => {
+  setSubjectsState((prev) => ({
+    ...prev,
+    [subject]: prev[subject]
+      ? { ...prev[subject], enabled: !prev[subject].enabled }
+      : {
+          enabled: true,
+          topicCount: 10,
+          includeTheory: false,
+          selectedTopics: []
+        }
+  }));
+};
+const openTopicModal = (subject) => {
+  setSelectedSubject(subject);
+  setShowModal(true);
+};
+
+const handleSubmitTopics = (subject, topics) => {
+  setSubjectsState((prev) => ({
+    ...prev,
+    [subject]: {
+      ...prev[subject],
+      selectedTopics: topics
+    }
+  }));
+};
 
   return (
     <div className="dashboard">
@@ -49,7 +102,7 @@ const Topic = () => {
     </button>
 
     {/* SUBJECT LIST */}
-    <div className="subject-list">
+    {/* <div className="subject-list">
 
       {[
         "Mathematics",
@@ -67,7 +120,85 @@ const Topic = () => {
         </label>
       ))}
 
-    </div>
+    </div> */}
+    <div className="subject-list">
+  {Object.keys(SUBJECT_TOPICS).map((subject) => {
+    const state = subjectsState[subject];
+
+    return (
+      <div key={subject} className="subject-block">
+        {/* SUBJECT CHECKBOX */}
+        <label className="subject-item">
+          <input
+            type="checkbox"
+            checked={state?.enabled || false}
+            onChange={() => toggleSubject(subject)}
+          />
+          <span>{subject}</span>
+        </label>
+
+    {state?.enabled && (
+  <div className="subject-options">
+
+    {/* SELECT TOPICS */}
+    <button
+      className="select-topics-btn"
+      onClick={() => openTopicModal(subject)}
+    >
+      Select Topics
+    </button>
+
+    {/* NUMBER OF QUESTIONS */}
+    <select
+      className="question-count-select"
+      value={state.topicCount}
+      onChange={(e) =>
+        setSubjectsState((prev) => ({
+          ...prev,
+          [subject]: {
+            ...prev[subject],
+            topicCount: Number(e.target.value)
+          }
+        }))
+      }
+    >
+      {[5, 10, 15, 20, 30].map((num) => (
+        <option key={num} value={num}>{num}</option>
+      ))}
+    </select>
+
+    {/* INCLUDE THEORY */}
+    <label className="theory-toggle">
+      <input
+        type="checkbox"
+        checked={state.includeTheory}
+        onChange={(e) =>
+          setSubjectsState((prev) => ({
+            ...prev,
+            [subject]: {
+              ...prev[subject],
+              includeTheory: e.target.checked
+            }
+          }))
+        }
+      />
+      <span>Include Theory</span>
+    </label>
+
+    {/* SELECTED TOPICS */}
+    {state.selectedTopics.length > 0 && (
+      <div className="selected-topics">
+        {state.selectedTopics.join(", ")}
+      </div>
+    )}
+  </div>
+)}
+
+      </div>
+    );
+  })}
+</div>
+
 
     {/* START TEST */}
     <button className="start-test-btn">
@@ -76,7 +207,14 @@ const Topic = () => {
 
   </section>
 </main>
+ <TopicModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        subject={selectedSubject}
+topics={SUBJECT_TOPICS[selectedSubject] || []}
 
+        onSubmit={handleSubmitTopics}
+      />
 
     </div>
   );
