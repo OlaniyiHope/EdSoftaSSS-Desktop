@@ -14,103 +14,105 @@ import { useNavigate } from "react-router-dom";
 const Start = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate(); // <-- hook
+  const navigate = useNavigate();
 
-const [questions, setQuestions] = useState([]);
-const [currentIndex, setCurrentIndex] = useState(0);
-const [answers, setAnswers] = useState({});
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [examConfig, setExamConfig] = useState(null);
+  const [activeSubject, setActiveSubject] = useState("");
+  const [questionsBySubject, setQuestionsBySubject] = useState({}); // ✅ top-level
 
-const [examConfig, setExamConfig] = useState(null);
-const [activeSubject, setActiveSubject] = useState("");
+  // Load exam config
+  useEffect(() => {
+    const stored = localStorage.getItem("examConfig");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setExamConfig(parsed);
 
-useEffect(() => {
-  const stored = localStorage.getItem("examConfig");
-  if (stored) {
-    const parsed = JSON.parse(stored);
-    setExamConfig(parsed);
+      const firstSubject = Object.keys(parsed.subjects)[0];
+      setActiveSubject(firstSubject);
+    }
+  }, []);
 
-    const firstSubject = Object.keys(parsed.subjects)[0];
-    setActiveSubject(firstSubject);
-  }
-}, []);
+  // Fetch all subjects' questions
+  useEffect(() => {
+    if (!examConfig) return;
 
-useEffect(() => {
-  if (!examConfig || !activeSubject) return;
+    const allSubjects = Object.keys(examConfig.subjects);
+    allSubjects.forEach((subject) => {
+      const config = examConfig.subjects[subject];
+      window.api
+        .getQuestionsForSubject(subject, config.selectedTopics, 50)
+        .then((data) => {
+          setQuestionsBySubject((prev) => ({
+            ...prev,
+            [subject]: data
+          }));
 
-  const config = examConfig.subjects[activeSubject];
+          // Set first subject questions
+          if (!questions.length && subject === allSubjects[0]) {
+            setQuestions(data);
+            setCurrentIndex(0);
+            setActiveSubject(subject);
+          }
+        });
+    });
+  }, [examConfig]);
 
-//   window.api
-//     .getQuestionsForSubject(
-//       activeSubject,
-//       config.selectedTopics,
-//       config.topicCount
-//     )
-//     .then((data) => {
-//       setQuestions(data);
-//       setCurrentIndex(0);
-//     });
-// window.api
-//   .getQuestionsForSubject(activeSubject, config.selectedTopics, config.topicCount)
-//   .then((data) => {
-//     // Convert object to array
-//     const arr = Object.values(data);
-//         console.log("Fetched questions:", arr);
-
-//     setQuestions(arr);
-//     setCurrentIndex(0);
-//   });
-window.api
-  .getQuestionsForSubject(activeSubject, config.selectedTopics, 50)
-  .then((data) => {
-    console.log("Fetched real questions:", data); // now you'll see full questions
-    setQuestions(data);
-    setCurrentIndex(0);
-  });
-
-}, [activeSubject, examConfig]);
-const currentQuestion = questions[currentIndex];
-const handleSelectOption = (key) => {
-  setAnswers((prev) => ({
-    ...prev,
-    [currentIndex]: key,
-  }));
+  // Switch subject tab
+const switchSubject = (subject) => {
+  setActiveSubject(subject);
+  setQuestions(questionsBySubject[subject] || []);
+  setCurrentIndex(0);
 };
 
-const goNext = () => {
-  if (currentIndex < questions.length - 1) {
-    setCurrentIndex((i) => i + 1);
-  }
-};
 
-const goPrev = () => {
-  if (currentIndex > 0) {
-    setCurrentIndex((i) => i - 1);
-  }
-};
+  // Current question
+  const currentQuestion = questions[currentIndex];
+
+  // Answer selection
+  const handleSelectOption = (key) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [`${activeSubject}-${currentIndex}`]: key, // track per subject
+    }));
+  };
+
+  // Navigation
+  const goNext = () => currentIndex < questions.length - 1 && setCurrentIndex(i => i + 1);
+  const goPrev = () => currentIndex > 0 && setCurrentIndex(i => i - 1);
+
+  // Submit
   const handleSubmit = () => {
-    if (!questions.length) return;
+    // Flatten all subjects questions
+    const allQuestions = Object.keys(questionsBySubject)
+      .map(sub => questionsBySubject[sub].map((q, i) => ({ ...q, globalIndex: `${sub}-${i}`, subject: sub })))
+      .flat();
 
     let correct = 0;
-    questions.forEach((q, i) => {
-      const userAnswer = answers[i];
-      const correctAnswer = q.Answer?.replace(/<[^>]+>/g, ""); // remove HTML
+    allQuestions.forEach((q) => {
+      const userAnswer = answers[q.globalIndex];
+      const correctAnswer = q.Answer?.replace(/<[^>]+>/g, "");
       if (userAnswer === correctAnswer) correct++;
     });
 
-    const total = questions.length;
-    const scorePercent = Math.round((correct / total) * 100);
+    const total = allQuestions.length;
+    const scoredMarks = correct * 2;
+    const totalMarks = total * 2;
+    const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
 
-    // Pass performance data via state
     navigate("/performance-history", {
       state: {
         totalQuestions: total,
         correctAnswers: correct,
         scorePercent,
         answers,
-        questions,
+        questions: allQuestions,
       },
     });
   };
+
   return (
    <div className="dashboard exam-dashboard">
       {/* LEFT EXAM SIDEBAR */}
@@ -149,18 +151,17 @@ const goPrev = () => {
         {/* SUBJECT TABS */}
         <div className="exam-tabs">
         <div className="exam-tabs">
-  {examConfig &&
-    Object.keys(examConfig.subjects).map((subject) => (
-      <button
-        key={subject}
-        className={`exam-tab ${
-          subject === activeSubject ? "active" : ""
-        }`}
-        onClick={() => setActiveSubject(subject)}
-      >
-        {subject}
-      </button>
-    ))}
+{examConfig &&
+  Object.keys(examConfig.subjects).map((subject) => (
+    <button
+      key={subject}
+      className={`exam-tab ${subject === activeSubject ? "active" : ""}`}
+      onClick={() => switchSubject(subject)}
+    >
+      {subject}
+    </button>
+))}
+
 </div>
 
         </div>
@@ -179,21 +180,21 @@ const goPrev = () => {
   />
 
   {/* OPTIONS */}
-  <div className="options">
-    {currentQuestion?.Options?.map((opt) => (
-      <label key={opt.Key} className="option">
-        <input
-          type="radio"
-          name={`question-${currentIndex}`}
-          checked={answers[currentIndex] === opt.Key}
-          onChange={() => handleSelectOption(opt.Key)}
-        />
-        <span
-          dangerouslySetInnerHTML={{ __html: opt.Value }}
-        />
-      </label>
-    ))}
-  </div>
+
+ <div className="options">
+  {currentQuestion?.Options?.map((opt) => (
+    <label key={opt.Key} className="option">
+      <input
+        type="radio"
+        name={`question-${currentIndex}`}
+        checked={answers[`${activeSubject}-${currentIndex}`] === opt.Key}
+        onChange={() => handleSelectOption(opt.Key)}
+      />
+      <span dangerouslySetInnerHTML={{ __html: opt.Value }} />
+    </label>
+  ))}
+</div>
+
 
   {/* NAVIGATION */}
   <div className="question-nav">
@@ -215,23 +216,26 @@ const goPrev = () => {
   </div>
 
   {/* QUESTION GRID */}
-  <div className="question-grid">
-    {questions.map((_, i) => (
-      <button
-        key={i}
-        className={`grid-btn ${
-          i === currentIndex
-            ? "active"
-            : answers[i]
-            ? "answered"
-            : ""
-        }`}
-        onClick={() => setCurrentIndex(i)}
-      >
-        {i + 1}
-      </button>
-    ))}
-  </div>
+ 
+    <div className="question-grid">
+  {questions.map((_, i) => (
+    <button
+      key={i}
+      className={`grid-btn ${
+        i === currentIndex
+          ? "active"
+          : answers[`${activeSubject}-${i}`]
+          ? "answered"
+          : ""
+      }`}
+      onClick={() => setCurrentIndex(i)}
+    >
+      {i + 1}
+    </button>
+  ))}
+</div>
+
+ 
 </section>
 
       </main>
