@@ -2142,3 +2142,57 @@ body {
   margin: 0 auto;     /* centers it */
   padding: 20px 40px; /* LEFT + RIGHT padding */
 }
+
+.exam-sidebar {
+  width: 260px;
+  background: #f1f3f6;
+  padding: 16px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.user-box {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.timer-box {
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 12px;
+}
+.timer-box .label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.timer {
+  margin-top: 8px;
+  background: #e6f0ff;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #1f3a8a;
+}
+.tools {
+  background: #ffffff;
+  padding: 10px 0;
+  border-radius: 12px;
+}
+.tools button {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+}
