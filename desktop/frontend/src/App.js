@@ -27,6 +27,7 @@ import Activate from "./pages/Activate";
 import Payment from "./pages/Payment";
 import Topic from "./pages/Topic";
 import Start from "./pages/Start";
+import PerHistory from "./pages/PerHistory";
 
 const App = () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/result-history" element={<ResultHistory />} />
           <Route path="/start-test" element={<Start />} />
           <Route path="/result-history-breakdown" element={<BreakHistory />} />
+          <Route path="/performance-history" element={<PerHistory />} />
           <Route path="/history" element={<History />} />
           <Route path="/activate" element={<Activate />} />
           <Route path="/payment" element={<Payment />} />

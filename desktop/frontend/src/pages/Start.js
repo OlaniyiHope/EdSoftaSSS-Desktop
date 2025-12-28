@@ -9,10 +9,12 @@ import {
 import AddUser from "./AddUser";
 import "./admin.css";
 import TopicModal from "./TopicModal";
+import { useNavigate } from "react-router-dom";
 
 const Start = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate(); // <-- hook
 
 const [questions, setQuestions] = useState([]);
 const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,7 +87,30 @@ const goPrev = () => {
     setCurrentIndex((i) => i - 1);
   }
 };
+  const handleSubmit = () => {
+    if (!questions.length) return;
 
+    let correct = 0;
+    questions.forEach((q, i) => {
+      const userAnswer = answers[i];
+      const correctAnswer = q.Answer?.replace(/<[^>]+>/g, ""); // remove HTML
+      if (userAnswer === correctAnswer) correct++;
+    });
+
+    const total = questions.length;
+    const scorePercent = Math.round((correct / total) * 100);
+
+    // Pass performance data via state
+    navigate("/performance-history", {
+      state: {
+        totalQuestions: total,
+        correctAnswers: correct,
+        scorePercent,
+        answers,
+        questions,
+      },
+    });
+  };
   return (
    <div className="dashboard exam-dashboard">
       {/* LEFT EXAM SIDEBAR */}
@@ -114,7 +139,9 @@ const goPrev = () => {
           <button>⚠️ Report Error</button>
         </div>
 
-        <button className="submit-test-btn">Submit test</button>
+       <button className="submit-test-btn" onClick={handleSubmit}>
+        Submit test
+      </button>
       </aside>
 
       {/* MAIN CONTENT */}
