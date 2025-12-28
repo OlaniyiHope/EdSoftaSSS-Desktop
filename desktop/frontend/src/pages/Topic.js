@@ -197,10 +197,26 @@ else {
 </div>
 
 
-    {/* START TEST */}
-    <button className="start-test-btn"      onClick={() => navigate("/start-test")}>
-      Start Test
-    </button>
+<button
+  className="start-test-btn"
+  onClick={() => {
+    const enabledSubjects = Object.fromEntries(
+      Object.entries(subjectsState).filter(
+        ([_, value]) => value.enabled
+      )
+    );
+
+    localStorage.setItem(
+      "examConfig",
+      JSON.stringify({ subjects: enabledSubjects })
+    );
+
+    navigate("/start-test");
+  }}
+>
+  Start Test
+</button>
+
 
   </section>
 </main>

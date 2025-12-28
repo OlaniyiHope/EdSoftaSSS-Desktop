@@ -15,6 +15,19 @@ const Start = () => {
   const [showModal, setShowModal] = useState(false);
 
 
+const [examConfig, setExamConfig] = useState(null);
+const [activeSubject, setActiveSubject] = useState("");
+
+useEffect(() => {
+  const stored = localStorage.getItem("examConfig");
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    setExamConfig(parsed);
+
+    const firstSubject = Object.keys(parsed.subjects)[0];
+    setActiveSubject(firstSubject);
+  }
+}, []);
 
 
   return (
@@ -52,18 +65,21 @@ const Start = () => {
       <main className="exam-main exam-content">
         {/* SUBJECT TABS */}
         <div className="exam-tabs">
-          {["English language", "Biology", "Chemistry", "Physics"].map(
-            (tab) => (
-              <button
-                key={tab}
-                className={`exam-tab ${
-                  tab === "Biology" ? "active" : ""
-                }`}
-              >
-                {tab}
-              </button>
-            )
-          )}
+        <div className="exam-tabs">
+  {examConfig &&
+    Object.keys(examConfig.subjects).map((subject) => (
+      <button
+        key={subject}
+        className={`exam-tab ${
+          subject === activeSubject ? "active" : ""
+        }`}
+        onClick={() => setActiveSubject(subject)}
+      >
+        {subject}
+      </button>
+    ))}
+</div>
+
         </div>
 
         {/* QUESTION PANEL */}
