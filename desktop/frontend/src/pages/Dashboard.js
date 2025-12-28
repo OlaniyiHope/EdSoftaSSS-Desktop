@@ -96,7 +96,7 @@ function FeatureCard({ title, active }) {
   ];
   const handleClick = (title) => {
     if (title === "Practice for UTME") {
-      navigate("/practice-for-utme"); // Adjust the route as needed
+      navigate("/practice-exam"); // Adjust the route as needed
     }
   };
 const [username, setUsername] = useState("");

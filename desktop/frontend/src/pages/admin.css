@@ -1664,3 +1664,189 @@ body {
     transform: translateY(0);
   }
 }
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.dashboard {
+  display: flex;
+  height: 100vh;
+  background: #f7f9fc;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+.bell {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: orange;
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.sidebar-nav {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-nav button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: none;
+  background: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sidebar-nav .active {
+  background: #0b5cff;
+  color: #fff;
+}
+
+.add-user {
+  margin-top: auto;
+  background: #eef3ff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+/* MAIN */
+.body {
+  flex: 1;
+  padding: 30px;
+}
+
+.page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.practice-layout {
+  display: flex;
+  gap: 30px;
+}
+
+/* LEFT */
+.practice-left {
+  flex: 2;
+}
+
+.intro-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.intro-icon {
+  font-size: 30px;
+}
+
+.timer-section {
+  margin-top: 30px;
+}
+
+.checkbox {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.timer-box {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.time-group {
+  text-align: center;
+}
+
+.time-control {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.time-control button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* RIGHT */
+.practice-right {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.select-label {
+  font-size: 14px;
+}
+
+.select-box {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px;
+}
+
+.desc {
+  font-size: 13px;
+  margin: 15px 0;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  background: #0b5cff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-btn.outline {
+  background: #fff;
+  color: #0b5cff;
+  border: 1px solid #0b5cff;
+}

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import About from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
 import All from "./pages/All";
@@ -28,16 +28,20 @@ import Payment from "./pages/Payment";
 import Topic from "./pages/Topic";
 
 const App = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/cbt" element={<Cbt />} />
-          <Route path="/" element={<Practice />} />
+    <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Practice />} />
+        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
           <Route path="/recommendation" element={<Recommend />} />
           <Route path="/ask" element={<Ask />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+        
+         
           <Route path="/study" element={<Study />} />
           <Route path="/practice-exam" element={<PracticeExam />} />
           <Route path="/dashboards" element={<AdminDashboard />} />
