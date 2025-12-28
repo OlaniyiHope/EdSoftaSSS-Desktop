@@ -9,11 +9,12 @@ import {
 import AddUser from "./AddUser";
 import "./admin.css";
 import TopicModal from "./TopicModal";
+import { useNavigate } from "react-router-dom";
 
 const Topic = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
-
+const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = useState("");
   const [subjectTopics, setSubjectTopics] = useState({});
   
@@ -197,7 +198,7 @@ else {
 
 
     {/* START TEST */}
-    <button className="start-test-btn">
+    <button className="start-test-btn"      onClick={() => navigate("/start-test")}>
       Start Test
     </button>
 
