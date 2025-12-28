@@ -330,6 +330,56 @@ ipcMain.handle("get-subject-topics", async (_event, subject) => {
 
   return topicNames;
 });
+ipcMain.handle(
+  "get-questions-for-subject",
+  async (_event, subject, selectedTopics = [], limit = 50) => {
+    const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
+
+    if (!fs.existsSync(topicsPath)) return [];
+
+    const topicsData = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+
+    let allQuestions = [];
+
+    for (const topic of topicsData) {
+      if (selectedTopics.length && !selectedTopics.includes(topic.Name)) {
+        continue; // skip if topic not selected
+      }
+
+      // Each topic has a Questions array with Year + Number
+      for (const qRef of topic.Questions) {
+        const yearFile = path.join(
+          __dirname,
+          "subject",
+          subject,
+          `${qRef.Year}.json`
+        );
+
+        if (!fs.existsSync(yearFile)) continue;
+
+        const yearData = JSON.parse(fs.readFileSync(yearFile, "utf-8"));
+
+        const questionKey = `Question ${qRef.Number}`;
+        const question = yearData[questionKey];
+
+        if (question) {
+          allQuestions.push({
+            ...question,
+            Topic: topic.Name,
+            Year: qRef.Year,
+          });
+        }
+      }
+    }
+
+    // Shuffle all questions
+    allQuestions.sort(() => Math.random() - 0.5);
+
+    // Limit to 50 questions
+    return allQuestions.slice(0, limit);
+  }
+);
+
 
 
 /* =========================

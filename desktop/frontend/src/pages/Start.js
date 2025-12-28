@@ -14,6 +14,9 @@ const Start = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
 
+const [questions, setQuestions] = useState([]);
+const [currentIndex, setCurrentIndex] = useState(0);
+const [answers, setAnswers] = useState({});
 
 const [examConfig, setExamConfig] = useState(null);
 const [activeSubject, setActiveSubject] = useState("");
@@ -29,6 +32,59 @@ useEffect(() => {
   }
 }, []);
 
+useEffect(() => {
+  if (!examConfig || !activeSubject) return;
+
+  const config = examConfig.subjects[activeSubject];
+
+//   window.api
+//     .getQuestionsForSubject(
+//       activeSubject,
+//       config.selectedTopics,
+//       config.topicCount
+//     )
+//     .then((data) => {
+//       setQuestions(data);
+//       setCurrentIndex(0);
+//     });
+// window.api
+//   .getQuestionsForSubject(activeSubject, config.selectedTopics, config.topicCount)
+//   .then((data) => {
+//     // Convert object to array
+//     const arr = Object.values(data);
+//         console.log("Fetched questions:", arr);
+
+//     setQuestions(arr);
+//     setCurrentIndex(0);
+//   });
+window.api
+  .getQuestionsForSubject(activeSubject, config.selectedTopics, 50)
+  .then((data) => {
+    console.log("Fetched real questions:", data); // now you'll see full questions
+    setQuestions(data);
+    setCurrentIndex(0);
+  });
+
+}, [activeSubject, examConfig]);
+const currentQuestion = questions[currentIndex];
+const handleSelectOption = (key) => {
+  setAnswers((prev) => ({
+    ...prev,
+    [currentIndex]: key,
+  }));
+};
+
+const goNext = () => {
+  if (currentIndex < questions.length - 1) {
+    setCurrentIndex((i) => i + 1);
+  }
+};
+
+const goPrev = () => {
+  if (currentIndex > 0) {
+    setCurrentIndex((i) => i - 1);
+  }
+};
 
   return (
    <div className="dashboard exam-dashboard">
@@ -81,52 +137,76 @@ useEffect(() => {
 </div>
 
         </div>
+{/* QUESTION PANEL */}
+<section className="question-panel">
+  <p className="question-count">
+    Question {currentIndex + 1} of {questions.length}
+  </p>
 
-        {/* QUESTION PANEL */}
-        <section className="question-panel">
-          <p className="question-count">Question 1 of 30</p>
+  {/* QUESTION */}
+  <div
+    className="question-box"
+    dangerouslySetInnerHTML={{
+      __html: currentQuestion?.Question || "",
+    }}
+  />
 
-          <div className="question-box">
-            Sunt adipisicing incididunt veniam anim mollit pariatur ex
-            nostrud consequat ad eiusmod mollit ea. Irure qui commodo est
-            Lorem nulla sit irure. Culpa cillum occaecat cupidatat mollit
-            sit cillum deserunt officia ad occaecat occaecat.
-          </div>
+  {/* OPTIONS */}
+  <div className="options">
+    {currentQuestion?.Options?.map((opt) => (
+      <label key={opt.Key} className="option">
+        <input
+          type="radio"
+          name={`question-${currentIndex}`}
+          checked={answers[currentIndex] === opt.Key}
+          onChange={() => handleSelectOption(opt.Key)}
+        />
+        <span
+          dangerouslySetInnerHTML={{ __html: opt.Value }}
+        />
+      </label>
+    ))}
+  </div>
 
-          <div className="options">
-            {[
-              "Nisi minim esse nulla laboris elit occaecat id anim tempor fugiat do.",
-              "Labore excepteur nostrud occaecat sint aliquip consectetur non minim ullamco.",
-              "Deserunt ullamco commodo quis et duis ullamco enim cupidatat ipsum excepteur id eu duis.",
-              "Dolor ullamco irure ea qui minim esse."
-            ].map((opt, i) => (
-              <label key={i} className="option">
-                <input type="radio" name="answer" />
-                <span>{opt}</span>
-              </label>
-            ))}
-          </div>
+  {/* NAVIGATION */}
+  <div className="question-nav">
+    <button
+      className="nav-btn"
+      onClick={goPrev}
+      disabled={currentIndex === 0}
+    >
+      ← Previous
+    </button>
 
-          {/* NAVIGATION */}
-          <div className="question-nav">
-            <button className="nav-btn">← Previous</button>
-            <button className="nav-btn primary">Next →</button>
-          </div>
+    <button
+      className="nav-btn primary"
+      onClick={goNext}
+      disabled={currentIndex === questions.length - 1}
+    >
+      Next →
+    </button>
+  </div>
 
-          {/* QUESTION NUMBERS */}
-          <div className="question-grid">
-            {[...Array(30)].map((_, i) => (
-              <button
-                key={i}
-                className={`grid-btn ${
-                  i === 0 ? "active" : i === 4 ? "answered" : ""
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        </section>
+  {/* QUESTION GRID */}
+  <div className="question-grid">
+    {questions.map((_, i) => (
+      <button
+        key={i}
+        className={`grid-btn ${
+          i === currentIndex
+            ? "active"
+            : answers[i]
+            ? "answered"
+            : ""
+        }`}
+        onClick={() => setCurrentIndex(i)}
+      >
+        {i + 1}
+      </button>
+    ))}
+  </div>
+</section>
+
       </main>
     </div>
   );
