@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaBell,
   FaCog,
@@ -16,8 +16,17 @@ const Topic = () => {
 
   const [selectedSubject, setSelectedSubject] = useState("");
   const [subjectTopics, setSubjectTopics] = useState({});
+  
+const [subjects, setSubjects] = useState([]);
   const [subjectsState, setSubjectsState] = useState({});
 
+
+  useEffect(() => {
+    window.api.getSubjects().then((data) => {
+      console.log("SUBJECTS FROM ELECTRON:", data);
+      setSubjects(data);
+    });
+  }, []);
   const handleSubjectClick = (subject) => {
     setSelectedSubject(subject);
     setShowModal(true);
@@ -100,30 +109,14 @@ const handleSubmitTopics = (subject, topics) => {
     <button className="add-subject-btn">
       + Add Practice Subjects
     </button>
-
-    {/* SUBJECT LIST */}
-    {/* <div className="subject-list">
-
-      {[
-        "Mathematics",
-        "English Language",
-        "Physics",
-        "Chemistry",
-        "Biology",
-        "Economics",
-        "Government",
-        "Literature"
-      ].map((subject, index) => (
-        <label key={index} className="subject-item">
-          <input type="checkbox" />
-          <span>{subject}</span>
-        </label>
-      ))}
-
-    </div> */}
-    <div className="subject-list">
-  {Object.keys(SUBJECT_TOPICS).map((subject) => {
-    const state = subjectsState[subject];
+<div className="subject-list">
+  {subjects.map((subject) => {
+    const state = subjectsState[subject] || {
+      enabled: false,
+      topicCount: 10,
+      includeTheory: false,
+      selectedTopics: []
+    };
 
     return (
       <div key={subject} className="subject-block">
@@ -131,69 +124,70 @@ const handleSubmitTopics = (subject, topics) => {
         <label className="subject-item">
           <input
             type="checkbox"
-            checked={state?.enabled || false}
+            checked={state.enabled}
             onChange={() => toggleSubject(subject)}
           />
           <span>{subject}</span>
         </label>
 
-    {state?.enabled && (
-  <div className="subject-options">
+        {state.enabled && (
+          <div className="subject-options">
 
-    {/* SELECT TOPICS */}
-    <button
-      className="select-topics-btn"
-      onClick={() => openTopicModal(subject)}
-    >
-      Select Topics
-    </button>
+            {/* SELECT TOPICS */}
+            <button
+              className="select-topics-btn"
+              onClick={() => openTopicModal(subject)}
+            >
+              Select Topics
+            </button>
 
-    {/* NUMBER OF QUESTIONS */}
-    <select
-      className="question-count-select"
-      value={state.topicCount}
-      onChange={(e) =>
-        setSubjectsState((prev) => ({
-          ...prev,
-          [subject]: {
-            ...prev[subject],
-            topicCount: Number(e.target.value)
-          }
-        }))
-      }
-    >
-      {[5, 10, 15, 20, 30].map((num) => (
-        <option key={num} value={num}>{num}</option>
-      ))}
-    </select>
+            {/* NUMBER OF QUESTIONS */}
+            <select
+              className="question-count-select"
+              value={state.topicCount}
+              onChange={(e) =>
+                setSubjectsState((prev) => ({
+                  ...prev,
+                  [subject]: {
+                    ...prev[subject],
+                    topicCount: Number(e.target.value),
+                  },
+                }))
+              }
+            >
+              {[5, 10, 15, 20, 30].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
 
-    {/* INCLUDE THEORY */}
-    <label className="theory-toggle">
-      <input
-        type="checkbox"
-        checked={state.includeTheory}
-        onChange={(e) =>
-          setSubjectsState((prev) => ({
-            ...prev,
-            [subject]: {
-              ...prev[subject],
-              includeTheory: e.target.checked
-            }
-          }))
-        }
-      />
-      <span>Include Theory</span>
-    </label>
+            {/* INCLUDE THEORY */}
+            <label className="theory-toggle">
+              <input
+                type="checkbox"
+                checked={state.includeTheory}
+                onChange={(e) =>
+                  setSubjectsState((prev) => ({
+                    ...prev,
+                    [subject]: {
+                      ...prev[subject],
+                      includeTheory: e.target.checked,
+                    },
+                  }))
+                }
+              />
+              <span>Include Theory</span>
+            </label>
 
-    {/* SELECTED TOPICS */}
-    {state.selectedTopics.length > 0 && (
-      <div className="selected-topics">
-        {state.selectedTopics.join(", ")}
-      </div>
-    )}
-  </div>
-)}
-
+            {/* SELECTED TOPICS */}
+            {state.selectedTopics.length > 0 && (
+              <div className="selected-topics">
+                {state.selectedTopics.join(", ")}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   })}

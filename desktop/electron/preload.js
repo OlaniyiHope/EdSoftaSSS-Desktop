@@ -22,10 +22,15 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
+  // AUTH
   register: async (userData) => {
-    console.log("Renderer sending register request:", userData); // will appear in DevTools
-    const result = await ipcRenderer.invoke("auth:register", userData);
-    console.log("Renderer received response:", result);
-    return result;
+    console.log("Renderer sending register request:", userData);
+    return ipcRenderer.invoke("auth:register", userData);
   },
+
+  // SUBJECTS
+  getSubjects: () => ipcRenderer.invoke("get-subjects"),
+
+  getSubjectTopics: (subject) =>
+    ipcRenderer.invoke("get-subject-topics", subject),
 });

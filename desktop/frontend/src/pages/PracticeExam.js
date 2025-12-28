@@ -241,11 +241,13 @@ import {
   FaPlus
 } from "react-icons/fa";
 import "./admin.css";
+import { useNavigate } from "react-router-dom";
 
 const PracticeExam = () => {
   const [withTimer, setWithTimer] = useState(false);
   const [hours, setHours] = useState(30);
   const [minutes, setMinutes] = useState(0);
+  const navigate = useNavigate();
 
   return (
     <div className="dashboard">
@@ -339,7 +341,12 @@ const PracticeExam = () => {
               to properly revise areas in a particular subject.
             </p>
 
-            <button className="primary-btn" href="/topic">Practice by Subject</button>
+        <button
+      className="primary-btn"
+      onClick={() => navigate("/topic")}
+    >
+      Practice by Subject
+    </button>
 
             <p className="desc">
               2. Select subjects, number and year of previous questions of your choice.
