@@ -339,7 +339,7 @@ const PracticeExam = () => {
               to properly revise areas in a particular subject.
             </p>
 
-            <button className="primary-btn">Practice by Topic</button>
+            <button className="primary-btn" href="/topic">Practice by Subject</button>
 
             <p className="desc">
               2. Select subjects, number and year of previous questions of your choice.
