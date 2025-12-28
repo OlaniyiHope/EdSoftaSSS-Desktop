@@ -31,16 +31,7 @@ const [subjects, setSubjects] = useState([]);
     setSelectedSubject(subject);
     setShowModal(true);
   };
-  const SUBJECT_TOPICS = {
-  Mathematics: ["Algebra", "Geometry", "Trigonometry", "Statistics"],
-  "English Language": ["Comprehension", "Grammar", "Vocabulary"],
-  Physics: ["Motion", "Energy", "Waves", "Electricity"],
-  Chemistry: ["Acids & Bases", "Periodic Table", "Organic Chemistry"],
-  Biology: ["Cell Biology", "Genetics", "Ecology"],
-  Economics: ["Demand & Supply", "Inflation", "Market Structures"],
-  Government: ["Constitution", "Democracy", "Political Parties"],
-  Literature: ["Drama", "Poetry", "Prose"]
-};
+
 
 
 //   const handleSubmitTopics = (subject, topics) => {
@@ -60,20 +51,31 @@ const [subjects, setSubjects] = useState([]);
         }
   }));
 };
-const openTopicModal = (subject) => {
-  setSelectedSubject(subject);
-  setShowModal(true);
-};
+const openTopicModal = async (subject) => {
+    setSelectedSubject(subject);
 
-const handleSubmitTopics = (subject, topics) => {
-  setSubjectsState((prev) => ({
-    ...prev,
-    [subject]: {
-      ...prev[subject],
-      selectedTopics: topics
+    // Fetch topics from Electron if not already fetched
+    if (!subjectTopics[subject]) {
+      const topics = await window.api.getSubjectTopics(subject); // call your existing IPC
+      console.log(`Topics fetched for ${subject}:`, topics);
+      setSubjectTopics((prev) => ({ ...prev, [subject]: topics }));
     }
-  }));
-};
+else {
+    console.log(`Topics already loaded for ${subject}:`, subjectTopics[subject]);
+  }
+
+    setShowModal(true);
+  };
+
+  const handleSubmitTopics = (subject, topics) => {
+    setSubjectsState((prev) => ({
+      ...prev,
+      [subject]: {
+        ...prev[subject],
+        selectedTopics: topics
+      }
+    }));
+  };
 
   return (
     <div className="dashboard">
@@ -205,7 +207,7 @@ const handleSubmitTopics = (subject, topics) => {
         open={showModal}
         onClose={() => setShowModal(false)}
         subject={selectedSubject}
-topics={SUBJECT_TOPICS[selectedSubject] || []}
+topics={subjectTopics[selectedSubject] || []}
 
         onSubmit={handleSubmitTopics}
       />

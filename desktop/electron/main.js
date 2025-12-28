@@ -317,23 +317,20 @@ ipcMain.handle("get-subjects", async () => {
 });
 
 ipcMain.handle("get-subject-topics", async (_event, subject) => {
-  const topicsPath = path.join(
-    __dirname,
-    "subject",
-    subject,
-    "Topics.json"
-  );
+  const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
 
   if (!fs.existsSync(topicsPath)) return [];
 
   const data = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
 
-  return [
-    ...new Set(
-      Object.values(data).map((q) => q.Topic)
-    )
-  ];
+  // Extract all topic names
+  const topicNames = data.map(topic => topic.Name);
+
+  console.log(`Topics fetched for ${subject}:`, topicNames); // <-- debug
+
+  return topicNames;
 });
+
 
 /* =========================
    APP LIFECYCLE
