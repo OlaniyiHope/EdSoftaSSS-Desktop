@@ -112,6 +112,15 @@ const switchSubject = (subject) => {
       },
     });
   };
+const [username, setUsername] = useState("");
+
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    setUsername(user.username); // or fullname if you want full name
+  }
+}, []);
 
   return (
    <div className="dashboard exam-dashboard">
@@ -125,7 +134,7 @@ const switchSubject = (subject) => {
               alt="user"
               className="user-avatar"
             />
-            <span>Boluwaite O.</span>
+             <span> {username || "User"}</span>
           </div>
           <button className="logout-btn">Log out</button>
         </div>
