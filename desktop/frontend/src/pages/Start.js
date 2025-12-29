@@ -67,6 +67,14 @@ const switchSubject = (subject) => {
   setCurrentIndex(0);
 };
 
+const [username, setUsername] = useState("");
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {  
+    const user = JSON.parse(storedUser);
+    setUsername(user.username || user.fullname || "");
+  }
+}, []);
 
   // Current question
   const currentQuestion = questions[currentIndex];
@@ -87,40 +95,71 @@ const switchSubject = (subject) => {
   const handleSubmit = () => {
     // Flatten all subjects questions
     const allQuestions = Object.keys(questionsBySubject)
-      .map(sub => questionsBySubject[sub].map((q, i) => ({ ...q, globalIndex: `${sub}-${i}`, subject: sub })))
+      .map(sub => questionsBySubject[sub].map((q, i) => ({
+  ...q,
+  subject: sub,
+  localIndex: i,
+  key: `${sub}-${i}`
+}))    
+    )
       .flat();
 
-    let correct = 0;
-    allQuestions.forEach((q) => {
-      const userAnswer = answers[q.globalIndex];
-      const correctAnswer = q.Answer?.replace(/<[^>]+>/g, "");
-      if (userAnswer === correctAnswer) correct++;
-    });
+    // let correct = 0;
+    // allQuestions.forEach((q) => {
+    //   const userAnswer = answers[q.globalIndex];
+    //   const correctAnswer = q.Answer?.replace(/<[^>]+>/g, "");
+    //   if (userAnswer === correctAnswer) correct++;
+    // });
+//     let correctAnswers = 0;
 
-    const total = allQuestions.length;
-    const scoredMarks = correct * 2;
-    const totalMarks = total * 2;
-    const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
+// questions.forEach((q) => {
+//   const userAnswer = answers[q.key];
+//   const correctAnswer = q.Answer?.replace(/<[^>]*>/g, "").trim();
 
-    navigate("/performance-history", {
-      state: {
-        totalQuestions: total,
-        correctAnswers: correct,
-        scorePercent,
-        answers,
-        questions: allQuestions,
-      },
-    });
-  };
-const [username, setUsername] = useState("");
+//   if (userAnswer && userAnswer === correctAnswer) {
+//     correctAnswers++;
+//   }
+// });
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    setUsername(user.username); // or fullname if you want full name
+
+//     const total = allQuestions.length;
+//     const scoredMarks = correct * 2;
+//     const totalMarks = total * 2;
+//     const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
+let correctAnswers = 0;
+
+allQuestions.forEach((q) => {
+  const userAnswer = answers[`${q.subject}-${q.localIndex}`];
+  const correctAnswer = q.Answer?.replace(/<[^>]*>/g, "").trim();
+
+  if (userAnswer && userAnswer === correctAnswer) {
+    correctAnswers++;
   }
-}, []);
+});
+
+const total = allQuestions.length;
+const scoredMarks = correctAnswers * 2;
+const totalMarks = total * 2;
+const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
+
+
+    // navigate("/performance-history", {
+    //   state: {
+    //     totalQuestions: total,
+    //     correctAnswers: correct,
+    //     scorePercent,
+    //     answers,
+    //     questions: allQuestions,
+    //   },
+    // });
+    navigate("/performance-history", {
+  state: {
+    questions: allQuestions,
+    answers
+  },
+});
+
+  };
 
   return (
    <div className="dashboard exam-dashboard">
