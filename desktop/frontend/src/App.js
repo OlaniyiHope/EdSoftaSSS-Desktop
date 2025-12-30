@@ -28,6 +28,7 @@ import Payment from "./pages/Payment";
 import Topic from "./pages/Topic";
 import Start from "./pages/Start";
 import PerHistory from "./pages/PerHistory";
+import StudyMat from "./pages/StudyMat";
 
 const App = () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -46,6 +47,7 @@ const App = () => {
          
           <Route path="/study" element={<Study />} />
           <Route path="/practice-exam" element={<PracticeExam />} />
+          <Route path="/study-material" element={<StudyMat />} />
           <Route path="/dashboards" element={<AdminDashboard />} />
           <Route path="/practice-for-utme" element={<All />} />
           <Route path="/notification" element={<Notification />} />

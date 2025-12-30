@@ -2196,3 +2196,127 @@ body {
   cursor: pointer;
   color: #374151;
 }
+.study-layout {
+  display: flex;
+  height: 100vh;
+  background: #f5f7fb;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* SIDEBAR */
+.study-sidebar {
+  width: 280px;
+  background: #ffffff;
+  border-right: 1px solid #e4e7ec;
+  padding: 15px;
+}
+
+.subject-dropdown {
+  background: #eaf2ff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topic-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #444;
+}
+
+.topic-item small {
+  color: #888;
+}
+
+.topic-item.active {
+  background: #eaf2ff;
+}
+
+/* MAIN CONTENT */
+.study-content {
+  flex: 1;
+  padding: 20px 30px;
+  position: relative;
+}
+
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.practice-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* CONTENT CARD */
+.content-card {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.content-banner {
+  background: #003b5c;
+  color: white;
+  padding: 25px;
+}
+
+.content-banner h1 {
+  margin: 0;
+}
+
+.content-body {
+  padding: 25px;
+}
+
+.content-body h1 {
+  margin-top: 0;
+}
+
+.content-body h2 {
+  margin-top: 20px;
+}
+
+/* AUDIO PLAYER */
+.audio-player {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  background: #fff;
+  border-radius: 30px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.audio-player button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.audio-icon {
+  color: #1e88e5;
+}

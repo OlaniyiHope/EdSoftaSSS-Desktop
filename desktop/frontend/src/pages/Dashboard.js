@@ -97,8 +97,13 @@ function FeatureCard({ title, active }) {
   const handleClick = (title) => {
     if (title === "Practice for UTME") {
       navigate("/practice-exam"); // Adjust the route as needed
+    }else if (title === "Read/Listen to Study Material"){
+      navigate("study-material");
     }
   };
+
+  
+
 const [username, setUsername] = useState("");
 
 useEffect(() => {
@@ -177,9 +182,9 @@ useEffect(() => {
 
     {[
       { icon: "fas fa-book", title: "Practice for UTME" },
-      { icon: "fas fa-feather-alt", title: "Literary Texts" },
-      { icon: "fas fa-graduation-cap", title: "WAEC Resources" },
-      { icon: "fas fa-university", title: "JAMB Resources" },
+      { icon: "fas fa-feather-alt", title: "Read/Listen to Study Material" },
+      { icon: "fas fa-graduation-cap", title: "Play Games" },
+      { icon: "fas fa-university", title: "Saved Question" },
     ].map((item, index) => (
       <div
         key={`offline-${index}`}
@@ -198,9 +203,9 @@ useEffect(() => {
     <div className="grid-label">Online Features</div>
 
     {[
-      { icon: "fas fa-chalkboard-teacher", title: "Tutorials" },
-      { icon: "fas fa-microscope", title: "Science Experiments" },
-      { icon: "fas fa-globe", title: "General Knowledge" },
+      { icon: "fas fa-chalkboard-teacher", title: "Search for Tutors" },
+      { icon: "fas fa-microscope", title: "Join Forum" },
+      { icon: "fas fa-globe", title: "See Learning Recommendation" },
     ].map((item, index) => (
       <div
         key={`online-${index}`}
