@@ -98,7 +98,7 @@ function FeatureCard({ title, active }) {
     if (title === "Practice for UTME") {
       navigate("/practice-exam"); // Adjust the route as needed
     }else if (title === "Read/Listen to Study Material"){
-      navigate("study-material");
+      navigate("/study-material");
     }
   };
 

@@ -379,6 +379,45 @@ ipcMain.handle(
     return allQuestions.slice(0, limit);
   }
 );
+/* =========================
+   📘 IPC: STUDY MATERIAL
+========================= */
+
+const STUDY_DIR = path.join(__dirname, "study");
+
+/* Get all study subjects (folders) */
+ipcMain.handle("study:get-subjects", async () => {
+  if (!fs.existsSync(STUDY_DIR)) return [];
+
+  return fs
+    .readdirSync(STUDY_DIR)
+    .filter((name) =>
+      fs.statSync(path.join(STUDY_DIR, name)).isDirectory()
+    );
+});
+
+/* Get topics (HTML files) inside a subject */
+ipcMain.handle("study:get-topics", async (_event, subject) => {
+  const subjectPath = path.join(STUDY_DIR, subject);
+
+  if (!fs.existsSync(subjectPath)) return [];
+
+  return fs
+    .readdirSync(subjectPath)
+    .filter((file) => file.endsWith(".html"));
+});
+
+/* Load HTML content of a topic */
+ipcMain.handle(
+  "study:get-content",
+  async (_event, { subject, topic }) => {
+    const filePath = path.join(STUDY_DIR, subject, topic);
+
+    if (!fs.existsSync(filePath)) return "";
+
+    return fs.readFileSync(filePath, "utf-8");
+  }
+);
 
 
 
