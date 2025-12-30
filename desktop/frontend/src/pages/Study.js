@@ -15,6 +15,7 @@ import useAuth from "../hooks/useAuth";
 import AddUser from "./AddUser";
 import "./admin.css";
 import { useSidebar } from "./SidebarProvider";
+import { useNavigate } from "react-router-dom";
 const Study = () => {
   const { user } = useAuth(); // Access the authenticated user
   const [points, setPoints] = useState([]);
@@ -25,7 +26,7 @@ const [openTerm, setOpenTerm] = useState(null);
 const toggleTerm = (term) => {
   setOpenTerm(openTerm === term ? null : term);
 };
-
+  const navigate = useNavigate();
 
  return (
   <div className="dashboard">
@@ -40,7 +41,7 @@ const toggleTerm = (term) => {
       </div>
 
       <nav>
-        <button className="active">
+        <button className="active"  onClick={() => navigate("/dashboard")}>
           <FaHome /> Home
         </button>
         <button>

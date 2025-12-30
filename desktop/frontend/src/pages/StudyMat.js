@@ -18,59 +18,59 @@ const StudyMat = () => {
   const [playing, setPlaying] = useState(false);
 
   /* =======================
-     LOAD SUBJECTS
+     LOAD STUDY SUBJECTS
   ======================= */
   useEffect(() => {
     console.log("🚀 StudyMat mounted");
     console.log("window.api =", window.api);
 
-    if (!window.api?.getSubjects) {
-      console.error("❌ getSubjects not found in preload");
+    if (!window.api?.getStudySubjects) {
+      console.error("❌ getStudySubjects not found in preload");
       return;
     }
 
-    window.api.getSubjects()
+    window.api.getStudySubjects()
       .then((data) => {
-        console.log("✅ Subjects loaded:", data);
+        console.log("✅ Study subjects loaded:", data);
         setSubjects(data);
         if (data.length) setSubject(data[0]);
       })
       .catch((err) => {
-        console.error("❌ Failed to load subjects:", err);
+        console.error("❌ Failed to load study subjects:", err);
       });
   }, []);
 
   /* =======================
-     LOAD TOPICS
+     LOAD TOPICS FOR SELECTED STUDY SUBJECT
   ======================= */
   useEffect(() => {
     if (!subject) return;
 
     console.log("📘 Selected subject:", subject);
 
-    if (!window.api?.getSubjectTopics) {
-      console.error("❌ getSubjectTopics not found in preload");
+    if (!window.api?.getStudyTopics) {
+      console.error("❌ getStudyTopics not found in preload");
       return;
     }
 
-    window.api.getSubjectTopics(subject)
+    window.api.getStudyTopics(subject)
       .then((files) => {
-        console.log("📂 Topics loaded:", files);
+        console.log("📂 Study topics loaded:", files);
         setTopics(files);
         if (files.length) setActiveTopic(files[0]);
       })
       .catch((err) => {
-        console.error("❌ Failed to load topics:", err);
+        console.error("❌ Failed to load study topics:", err);
       });
   }, [subject]);
 
   /* =======================
-     LOAD CONTENT (HTML)
+     LOAD STUDY CONTENT (HTML)
   ======================= */
   useEffect(() => {
     if (!subject || !activeTopic) return;
 
-    console.log("📄 Loading content:", subject, activeTopic);
+    console.log("📄 Loading study content:", subject, activeTopic);
 
     if (!window.api?.getStudyContent) {
       console.error("❌ getStudyContent not found in preload");
@@ -79,11 +79,11 @@ const StudyMat = () => {
 
     window.api.getStudyContent(subject, activeTopic)
       .then((html) => {
-        console.log("✅ Content loaded (length):", html?.length);
+        console.log("✅ Study content loaded (length):", html?.length);
         setContent(html);
       })
       .catch((err) => {
-        console.error("❌ Failed to load content:", err);
+        console.error("❌ Failed to load study content:", err);
       });
   }, [subject, activeTopic]);
 

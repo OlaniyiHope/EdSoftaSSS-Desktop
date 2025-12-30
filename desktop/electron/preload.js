@@ -71,7 +71,7 @@
 //       topics,
 //       limit
 //     ),
-// });
+// });const { contextBridge, ipcRenderer } = require("electron");
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
@@ -82,13 +82,13 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("auth:register", userData),
 
   // =====================
-  // SUBJECTS (EXAMS)
+  // EXAM SUBJECTS
   // =====================
   getSubjects: () =>
-    ipcRenderer.invoke("get-subjects"),
+    ipcRenderer.invoke("get-subjects"),                  // Exam subjects
 
   getSubjectTopics: (subject) =>
-    ipcRenderer.invoke("get-subject-topics", subject),
+    ipcRenderer.invoke("get-subject-topics", subject),   // Exam topics
 
   // =====================
   // QUESTIONS
@@ -102,18 +102,14 @@ contextBridge.exposeInMainWorld("api", {
     ),
 
   // =====================
-  // 📘 STUDY MATERIAL (NEW)
+  // 📘 STUDY MATERIAL
   // =====================
-
-  // Get list of study subjects (folders)
   getStudySubjects: () =>
-    ipcRenderer.invoke("study:get-subjects"),
+    ipcRenderer.invoke("study:get-subjects"),           // Study subjects (folders)
 
-  // Get topics (HTML files) for a subject
   getStudyTopics: (subject) =>
-    ipcRenderer.invoke("study:get-topics", subject),
+    ipcRenderer.invoke("study:get-topics", subject),    // Study topics (HTML files)
 
-  // Get HTML content of a topic
   getStudyContent: (subject, topic) =>
-    ipcRenderer.invoke("study:get-content", { subject, topic }),
+    ipcRenderer.invoke("study:get-content", { subject, topic }) // Study content (HTML)
 });

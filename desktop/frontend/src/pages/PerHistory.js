@@ -176,7 +176,7 @@ import {
 } from "react-icons/fa";
 import AddUser from "./AddUser";
 import "./admin.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PerHistory = () => {
   const location = useLocation();
@@ -225,7 +225,7 @@ const PerHistory = () => {
       [subject]: !prev[subject],
     }));
   };
-
+  const navigate = useNavigate();
   return (
     <div className="dashboard">
       {/* Sidebar */}
@@ -239,7 +239,7 @@ const PerHistory = () => {
         </div>
 
         <nav>
-          <button className="active">
+          <button className="active"  onClick={() => navigate("/dashboard")}b >
             <FaHome /> Home
           </button>
           <button>

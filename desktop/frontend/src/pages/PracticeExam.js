@@ -262,7 +262,7 @@ const PracticeExam = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <button className="active"><FaHome /> Home</button>
+          <button className="active"  onClick={() => navigate("/dashboard")}><FaHome /> Home</button>
           <button><FaStickyNote /> Notes</button>
           <button><FaNewspaper /> News</button>
           <button><FaCog /> Settings</button>

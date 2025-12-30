@@ -9,10 +9,11 @@ import {
 } from "react-icons/fa";
 import AddUser from "./AddUser";
 import "./admin.css";
+import { useNavigate } from "react-router-dom";
 
 const ResultHistory = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <div className="dashboard">
       {/* SIDEBAR */}
@@ -26,7 +27,7 @@ const ResultHistory = () => {
         </div>
 
         <nav>
-          <button className="active"><FaHome /> Home</button>
+          <button className="active" onClick={() => navigate("/dashboard")}><FaHome /> Home</button>
           <button><FaStickyNote /> Notes</button>
           <button><FaNewspaper /> News</button>
           <button><FaCog /> Settings</button>

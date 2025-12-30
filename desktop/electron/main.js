@@ -227,7 +227,217 @@
 //     )
 //   ];
 
-//   return topics;
+// //   return topics;
+// const { app, BrowserWindow, ipcMain } = require("electron");
+// const path = require("path");
+// const fs = require("fs");
+// const Database = require("better-sqlite3");
+// const bcrypt = require("bcryptjs");
+
+// let db;
+
+// // Disable GPU to remove EGL errors in macOS
+// app.commandLine.appendSwitch("disable-gpu");
+// app.commandLine.appendSwitch("disable-software-rasterizer");
+
+// /* =========================
+//    CREATE WINDOW
+// ========================= */
+// function createWindow() {
+//   const win = new BrowserWindow({
+//     width: 1200,
+//     height: 800,
+//     webPreferences: {
+//       preload: path.join(__dirname, "preload.js"),
+//       nodeIntegration: false,
+//       contextIsolation: true,
+//     },
+//   });
+
+//   win.loadURL("http://localhost:3000");
+//   win.webContents.openDevTools();
+// }
+
+// /* =========================
+//    DATABASE
+// ========================= */
+// function initDatabase() {
+//   const dbPath = path.join(__dirname, "app.db");
+//   db = new Database(dbPath);
+
+//   db.prepare(`
+//     CREATE TABLE IF NOT EXISTS users (
+//       id INTEGER PRIMARY KEY AUTOINCREMENT,
+//       fullname TEXT,
+//       username TEXT,
+//       email TEXT UNIQUE,
+//       phone TEXT,
+//       password TEXT,
+//       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//     )
+//   `).run();
+// }
+
+// /* =========================
+//    IPC: AUTH REGISTER
+// ========================= */
+// ipcMain.handle("auth:register", async (_event, payload) => {
+//   const { fullname, phone, username, email, password } = payload;
+
+//   try {
+//     const hashedPassword = bcrypt.hashSync(password, 10);
+
+//     db.prepare(`
+//       INSERT INTO users (fullname, phone, username, email, password)
+//       VALUES (?, ?, ?, ?, ?)
+//     `).run(fullname, phone, username, email, hashedPassword);
+
+//     return { status: 201, user: { fullname, username, email, phone } };
+//   } catch (err) {
+//     if (err.message.includes("UNIQUE")) {
+//       return { status: 409, message: "Email already exists" };
+//     }
+//     return { status: 500, message: "Registration failed" };
+//   }
+// });
+
+// /* =========================
+//    IPC: SUBJECTS
+// ========================= */
+// ipcMain.handle("get-subjects", async () => {
+//   const subjectDir = path.join(__dirname, "subject");
+
+//   if (!fs.existsSync(subjectDir)) return [];
+
+//   return fs
+//     .readdirSync(subjectDir)
+//     .filter((name) =>
+//       fs.statSync(path.join(subjectDir, name)).isDirectory()
+//     );
+// });
+
+// ipcMain.handle("get-subject-topics", async (_event, subject) => {
+//   const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
+
+//   if (!fs.existsSync(topicsPath)) return [];
+
+//   const data = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+
+//   // Extract all topic names
+//   const topicNames = data.map(topic => topic.Name);
+
+//   console.log(`Topics fetched for ${subject}:`, topicNames); // <-- debug
+
+//   return topicNames;
+// });
+// ipcMain.handle(
+//   "get-questions-for-subject",
+//   async (_event, subject, selectedTopics = [], limit = 50) => {
+//     const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
+
+//     if (!fs.existsSync(topicsPath)) return [];
+
+//     const topicsData = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+
+//     let allQuestions = [];
+
+//     for (const topic of topicsData) {
+//       if (selectedTopics.length && !selectedTopics.includes(topic.Name)) {
+//         continue; // skip if topic not selected
+//       }
+
+//       // Each topic has a Questions array with Year + Number
+//       for (const qRef of topic.Questions) {
+//         const yearFile = path.join(
+//           __dirname,
+//           "subject",
+//           subject,
+//           `${qRef.Year}.json`
+//         );
+
+//         if (!fs.existsSync(yearFile)) continue;
+
+//         const yearData = JSON.parse(fs.readFileSync(yearFile, "utf-8"));
+
+//         const questionKey = `Question ${qRef.Number}`;
+//         const question = yearData[questionKey];
+
+//         if (question) {
+//           allQuestions.push({
+//             ...question,
+//             Topic: topic.Name,
+//             Year: qRef.Year,
+//           });
+//         }
+//       }
+//     }
+
+//     // Shuffle all questions
+//     allQuestions.sort(() => Math.random() - 0.5);
+
+//     // Limit to 50 questions
+//     return allQuestions.slice(0, limit);
+//   }
+// );
+// /* =========================
+//    📘 IPC: STUDY MATERIAL
+// ========================= */
+
+// const STUDY_DIR = path.join(__dirname, "study");
+
+// /* Get all study subjects (folders) */
+// ipcMain.handle("study:get-subjects", async () => {
+//   if (!fs.existsSync(STUDY_DIR)) return [];
+
+//   return fs
+//     .readdirSync(STUDY_DIR)
+//     .filter((name) =>
+//       fs.statSync(path.join(STUDY_DIR, name)).isDirectory()
+//     );
+// });
+
+// /* Get topics (HTML files) inside a subject */
+// ipcMain.handle("study:get-topics", async (_event, subject) => {
+//   const subjectPath = path.join(STUDY_DIR, subject);
+
+//   if (!fs.existsSync(subjectPath)) return [];
+
+//   return fs
+//     .readdirSync(subjectPath)
+//     .filter((file) => file.endsWith(".html"));
+// });
+
+// /* Load HTML content of a topic */
+// ipcMain.handle(
+//   "study:get-content",
+//   async (_event, { subject, topic }) => {
+//     const filePath = path.join(STUDY_DIR, subject, topic);
+
+//     if (!fs.existsSync(filePath)) return "";
+
+//     return fs.readFileSync(filePath, "utf-8");
+//   }
+// );
+
+
+
+// /* =========================
+//    APP LIFECYCLE
+// ========================= */
+// app.whenReady().then(() => {
+//   initDatabase();
+//   createWindow();
+
+//   app.on("activate", () => {
+//     if (BrowserWindow.getAllWindows().length === 0) {
+//       createWindow();
+//     }
+//   });
+// });
+
+// app.on("window-all-closed", () => {
+//   if (process.platform !== "darwin") app.quit();
+// });
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
@@ -236,7 +446,7 @@ const bcrypt = require("bcryptjs");
 
 let db;
 
-// Disable GPU to remove EGL errors in macOS
+// Disable GPU to remove EGL errors on macOS
 app.commandLine.appendSwitch("disable-gpu");
 app.commandLine.appendSwitch("disable-software-rasterizer");
 
@@ -254,12 +464,12 @@ function createWindow() {
     },
   });
 
-  win.loadURL("http://localhost:3000");
+  win.loadURL("http://localhost:3000"); // React dev server
   win.webContents.openDevTools();
 }
 
 /* =========================
-   DATABASE
+   DATABASE INIT
 ========================= */
 function initDatabase() {
   const dbPath = path.join(__dirname, "app.db");
@@ -279,7 +489,7 @@ function initDatabase() {
 }
 
 /* =========================
-   IPC: AUTH REGISTER
+   IPC: AUTH
 ========================= */
 ipcMain.handle("auth:register", async (_event, payload) => {
   const { fullname, phone, username, email, password } = payload;
@@ -302,124 +512,79 @@ ipcMain.handle("auth:register", async (_event, payload) => {
 });
 
 /* =========================
-   IPC: SUBJECTS
+   IPC: EXAM SUBJECTS
 ========================= */
+const SUBJECT_DIR = path.join(__dirname, "subject");
+
 ipcMain.handle("get-subjects", async () => {
-  const subjectDir = path.join(__dirname, "subject");
-
-  if (!fs.existsSync(subjectDir)) return [];
-
+  if (!fs.existsSync(SUBJECT_DIR)) return [];
   return fs
-    .readdirSync(subjectDir)
-    .filter((name) =>
-      fs.statSync(path.join(subjectDir, name)).isDirectory()
-    );
+    .readdirSync(SUBJECT_DIR)
+    .filter((name) => fs.statSync(path.join(SUBJECT_DIR, name)).isDirectory());
 });
 
 ipcMain.handle("get-subject-topics", async (_event, subject) => {
-  const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
+  const topicsPath = path.join(SUBJECT_DIR, subject, "Topics.json");
+  if (!fs.existsSync(topicsPath)) return [];
+  const data = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+  return data.map((topic) => topic.Name);
+});
 
+ipcMain.handle("get-questions-for-subject", async (_event, subject, selectedTopics = [], limit = 50) => {
+  const topicsPath = path.join(SUBJECT_DIR, subject, "Topics.json");
   if (!fs.existsSync(topicsPath)) return [];
 
-  const data = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+  const topicsData = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
+  let allQuestions = [];
 
-  // Extract all topic names
-  const topicNames = data.map(topic => topic.Name);
+  for (const topic of topicsData) {
+    if (selectedTopics.length && !selectedTopics.includes(topic.Name)) continue;
 
-  console.log(`Topics fetched for ${subject}:`, topicNames); // <-- debug
+    for (const qRef of topic.Questions) {
+      const yearFile = path.join(SUBJECT_DIR, subject, `${qRef.Year}.json`);
+      if (!fs.existsSync(yearFile)) continue;
 
-  return topicNames;
-});
-ipcMain.handle(
-  "get-questions-for-subject",
-  async (_event, subject, selectedTopics = [], limit = 50) => {
-    const topicsPath = path.join(__dirname, "subject", subject, "Topics.json");
+      const yearData = JSON.parse(fs.readFileSync(yearFile, "utf-8"));
+      const questionKey = `Question ${qRef.Number}`;
+      const question = yearData[questionKey];
 
-    if (!fs.existsSync(topicsPath)) return [];
-
-    const topicsData = JSON.parse(fs.readFileSync(topicsPath, "utf-8"));
-
-    let allQuestions = [];
-
-    for (const topic of topicsData) {
-      if (selectedTopics.length && !selectedTopics.includes(topic.Name)) {
-        continue; // skip if topic not selected
-      }
-
-      // Each topic has a Questions array with Year + Number
-      for (const qRef of topic.Questions) {
-        const yearFile = path.join(
-          __dirname,
-          "subject",
-          subject,
-          `${qRef.Year}.json`
-        );
-
-        if (!fs.existsSync(yearFile)) continue;
-
-        const yearData = JSON.parse(fs.readFileSync(yearFile, "utf-8"));
-
-        const questionKey = `Question ${qRef.Number}`;
-        const question = yearData[questionKey];
-
-        if (question) {
-          allQuestions.push({
-            ...question,
-            Topic: topic.Name,
-            Year: qRef.Year,
-          });
-        }
+      if (question) {
+        allQuestions.push({
+          ...question,
+          Topic: topic.Name,
+          Year: qRef.Year,
+        });
       }
     }
-
-    // Shuffle all questions
-    allQuestions.sort(() => Math.random() - 0.5);
-
-    // Limit to 50 questions
-    return allQuestions.slice(0, limit);
   }
-);
-/* =========================
-   📘 IPC: STUDY MATERIAL
-========================= */
 
+  allQuestions.sort(() => Math.random() - 0.5);
+  return allQuestions.slice(0, limit);
+});
+
+/* =========================
+   IPC: STUDY MATERIAL
+========================= */
 const STUDY_DIR = path.join(__dirname, "study");
 
-/* Get all study subjects (folders) */
 ipcMain.handle("study:get-subjects", async () => {
   if (!fs.existsSync(STUDY_DIR)) return [];
-
   return fs
     .readdirSync(STUDY_DIR)
-    .filter((name) =>
-      fs.statSync(path.join(STUDY_DIR, name)).isDirectory()
-    );
+    .filter((name) => fs.statSync(path.join(STUDY_DIR, name)).isDirectory());
 });
 
-/* Get topics (HTML files) inside a subject */
 ipcMain.handle("study:get-topics", async (_event, subject) => {
   const subjectPath = path.join(STUDY_DIR, subject);
-
   if (!fs.existsSync(subjectPath)) return [];
-
-  return fs
-    .readdirSync(subjectPath)
-    .filter((file) => file.endsWith(".html"));
+  return fs.readdirSync(subjectPath).filter((file) => file.endsWith(".html"));
 });
 
-/* Load HTML content of a topic */
-ipcMain.handle(
-  "study:get-content",
-  async (_event, { subject, topic }) => {
-    const filePath = path.join(STUDY_DIR, subject, topic);
-
-    if (!fs.existsSync(filePath)) return "";
-
-    return fs.readFileSync(filePath, "utf-8");
-  }
-);
-
-
+ipcMain.handle("study:get-content", async (_event, { subject, topic }) => {
+  const filePath = path.join(STUDY_DIR, subject, topic);
+  if (!fs.existsSync(filePath)) return "";
+  return fs.readFileSync(filePath, "utf-8");
+});
 
 /* =========================
    APP LIFECYCLE
@@ -429,9 +594,7 @@ app.whenReady().then(() => {
   createWindow();
 
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 

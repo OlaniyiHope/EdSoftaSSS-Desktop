@@ -127,7 +127,7 @@ useEffect(() => {
       </div>
 
       <nav>
-        <button className="active">
+        <button className="active"    onClick={() => navigate("/dashboard")}>
           <FaHome /> Home
         </button>
         <button>
