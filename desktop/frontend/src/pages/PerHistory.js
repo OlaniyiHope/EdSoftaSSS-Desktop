@@ -180,7 +180,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const PerHistory = () => {
   const location = useLocation();
-
+ const navigate = useNavigate();
   // ✅ SAFELY destructure FIRST
   const {
     questions = [],
@@ -225,7 +225,7 @@ const PerHistory = () => {
       [subject]: !prev[subject],
     }));
   };
-  const navigate = useNavigate();
+ 
   return (
     <div className="dashboard">
       {/* Sidebar */}

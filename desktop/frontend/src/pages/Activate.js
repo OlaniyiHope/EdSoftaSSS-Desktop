@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import AddUser from "./AddUser";
 import "./admin.css";
+import { useNavigate } from "react-router-dom";
 
 const Activate = () => {
   const [activeTab, setActiveTab] = useState("key");
