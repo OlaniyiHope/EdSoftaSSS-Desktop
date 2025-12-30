@@ -169,7 +169,7 @@ useEffect(() => {
            <p className="subtitle">
             Hello there, we have a study plan drafted just for you.
           </p>
-          <button className="primary-btn">Get started</button>
+          <button className="primary-btn2">Get started</button>
 
       {/* BODY CONTENT */}
       <div className="body-content">
