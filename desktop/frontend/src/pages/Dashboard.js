@@ -195,7 +195,7 @@ useEffect(() => {
         <div className="box-icon">
           <i className={item.icon} />
         </div>
-        <h4>{item.title}</h4>
+        <h6>{item.title}</h6>
       </div>
     ))}
 
@@ -216,7 +216,7 @@ useEffect(() => {
         <div className="box-icon">
           <i className={item.icon} />
         </div>
-        <h4>{item.title}</h4>
+        <h6>{item.title}</h6>
       </div>
     ))}
 
