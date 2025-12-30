@@ -750,7 +750,7 @@ body {
   font-size: 18px;
 }
 .add-user {
-  margin-top: auto; /* pushes it to the bottom */
+ /* pushes it to the bottom */
   display: flex;
   align-items: center;
   gap: 14px;

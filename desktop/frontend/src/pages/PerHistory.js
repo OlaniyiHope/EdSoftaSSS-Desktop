@@ -239,7 +239,7 @@ const PerHistory = () => {
         </div>
 
         <nav>
-          <button className="active"  onClick={() => navigate("/dashboard")}b >
+          <button className="active"  onClick={() => navigate("/dashboard")} >
             <FaHome /> Home
           </button>
           <button>
