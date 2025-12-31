@@ -16,6 +16,7 @@ const Start = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 const [showActivationModal, setShowActivationModal] = useState(false);
+const isActivated = localStorage.getItem("isActivated") === "true";
 
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -69,11 +70,11 @@ const [showActivationModal, setShowActivationModal] = useState(false);
 // };
 const switchSubject = (subject) => {
   const answeredCount = getAnsweredCountForSubject(activeSubject);
+if (!isActivated && answeredCount >= 5) {
+  setShowActivationModal(true);
+  return;
+}
 
-  if (answeredCount >= 5) {
-    setShowActivationModal(true);
-    return;
-  }
 
   setActiveSubject(subject);
   setQuestions(questionsBySubject[subject] || []);
@@ -114,10 +115,11 @@ useEffect(() => {
   }
 
   // limit reached
-  if (answeredCount >= 5) {
-    setShowActivationModal(true);
-    return;
-  }
+if (!isActivated && answeredCount >= 5) {
+  setShowActivationModal(true);
+  return;
+}
+
 
   setAnswers((prev) => ({
     ...prev,
@@ -131,10 +133,11 @@ useEffect(() => {
   const goNext = () => {
   const answeredCount = getAnsweredCountForSubject(activeSubject);
 
-  if (answeredCount >= 5) {
-    setShowActivationModal(true);
-    return;
-  }
+if (!isActivated && answeredCount >= 5) {
+  setShowActivationModal(true);
+  return;
+}
+
 
   if (currentIndex < questions.length - 1) {
     setCurrentIndex((i) => i + 1);

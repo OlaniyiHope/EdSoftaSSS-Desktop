@@ -486,6 +486,16 @@ function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `).run();
+
+  db.prepare(`
+  CREATE TABLE IF NOT EXISTS activation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    license_key TEXT,
+    is_active INTEGER DEFAULT 0,
+    activated_at DATETIME
+  )
+`).run();
+
 }
 
 /* =========================
@@ -560,6 +570,38 @@ ipcMain.handle("get-questions-for-subject", async (_event, subject, selectedTopi
 
   allQuestions.sort(() => Math.random() - 0.5);
   return allQuestions.slice(0, limit);
+});
+ipcMain.handle("api:activate", async (_event, payload) => {
+  const { licenseKey } = payload;
+
+  try {
+    if (!licenseKey) {
+      return { status: 400, message: "License key is required" };
+    }
+
+    // 🔐 Example validation (replace with real logic later)
+    const VALID_KEY = "OGAPOS-2025-ACTIVE";
+
+    if (licenseKey !== VALID_KEY) {
+      return { status: 401, message: "Invalid license key" };
+    }
+
+    // Save activation
+    db.prepare(`
+      INSERT INTO activation (license_key, is_active, activated_at)
+      VALUES (?, 1, CURRENT_TIMESTAMP)
+    `).run(licenseKey);
+
+    return {
+      status: 200,
+      message: "Application activated successfully",
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      message: "Activation failed",
+    };
+  }
 });
 
 /* =========================

@@ -80,6 +80,8 @@ contextBridge.exposeInMainWorld("api", {
   // =====================
   register: (userData) =>
     ipcRenderer.invoke("auth:register", userData),
+activateApp: (licenseKey) =>
+  ipcRenderer.invoke("api:activate", { licenseKey }),
 
   // =====================
   // EXAM SUBJECTS
@@ -112,4 +114,5 @@ contextBridge.exposeInMainWorld("api", {
 
   getStudyContent: (subject, topic) =>
     ipcRenderer.invoke("study:get-content", { subject, topic }) // Study content (HTML)
+  
 });

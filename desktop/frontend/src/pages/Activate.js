@@ -13,7 +13,30 @@ import { useNavigate } from "react-router-dom";
 const Activate = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
+  const [license, setLicense] = useState("");
+
   const navigate = useNavigate();
+const activate = async () => {
+  if (!license.trim()) {
+    alert("Please enter an activation key");
+    return;
+  }
+
+  const res = await window.api.activateApp(license);
+
+  if (res.status === 200) {
+    localStorage.setItem("isActivated", "true");
+    localStorage.setItem("activationKey", license);
+
+    alert("Activated successfully");
+
+    navigate("/dashboard"); // or wherever
+  } else {
+    alert(res.message);
+  }
+};
+
+
   return (
     <div className="dashboard">
       {/* SIDEBAR */}
@@ -71,11 +94,18 @@ const Activate = () => {
           {activeTab === "key" && (
             <div className="activate-form">
               <label>Enter Activation Key</label>
-              <input type="text" placeholder="" />
+            <input
+  type="text"
+  placeholder="Enter activation key"
+  value={license}
+  onChange={(e) => setLicense(e.target.value)}
+/>
 
-              <button className="activate-btn">
-                Generate Activation Key
-              </button>
+
+           <button className="activate-btn" onClick={activate}>
+  Activate App
+</button>
+
             </div>
           )}
           {/* FORM */}
@@ -95,10 +125,10 @@ const Activate = () => {
       <label>Phone Number</label>
       <input type="text" placeholder="Enter phone number" />
   
+<button className="activate-btn" onClick={activate}>
+  Activate App
+</button>
 
-    <button className="activate-btn">
-      Generate Activation Key
-    </button>
   </div>
 )}
 {/* I WANT TO BUY */}
