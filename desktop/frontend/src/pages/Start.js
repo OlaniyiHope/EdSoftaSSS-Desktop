@@ -15,6 +15,7 @@ const Start = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+const [showActivationModal, setShowActivationModal] = useState(false);
 
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -61,11 +62,24 @@ const Start = () => {
   }, [examConfig]);
 
   // Switch subject tab
+// const switchSubject = (subject) => {
+//   setActiveSubject(subject);
+//   setQuestions(questionsBySubject[subject] || []);
+//   setCurrentIndex(0);
+// };
 const switchSubject = (subject) => {
+  const answeredCount = getAnsweredCountForSubject(activeSubject);
+
+  if (answeredCount >= 5) {
+    setShowActivationModal(true);
+    return;
+  }
+
   setActiveSubject(subject);
   setQuestions(questionsBySubject[subject] || []);
   setCurrentIndex(0);
 };
+
 
 const [username, setUsername] = useState("");
 useEffect(() => {
@@ -80,15 +94,53 @@ useEffect(() => {
   const currentQuestion = questions[currentIndex];
 
   // Answer selection
+  // const handleSelectOption = (key) => {
+  //   setAnswers((prev) => ({
+  //     ...prev,
+  //     [`${activeSubject}-${currentIndex}`]: key, // track per subject
+  //   }));
+  // };
   const handleSelectOption = (key) => {
+  const answeredCount = getAnsweredCountForSubject(activeSubject);
+
+  // already answered this question → allow change
+  const questionKey = `${activeSubject}-${currentIndex}`;
+  if (answers[questionKey]) {
     setAnswers((prev) => ({
       ...prev,
-      [`${activeSubject}-${currentIndex}`]: key, // track per subject
+      [questionKey]: key,
     }));
-  };
+    return;
+  }
+
+  // limit reached
+  if (answeredCount >= 5) {
+    setShowActivationModal(true);
+    return;
+  }
+
+  setAnswers((prev) => ({
+    ...prev,
+    [questionKey]: key,
+  }));
+};
+
 
   // Navigation
-  const goNext = () => currentIndex < questions.length - 1 && setCurrentIndex(i => i + 1);
+  // const goNext = () => currentIndex < questions.length - 1 && setCurrentIndex(i => i + 1);
+  const goNext = () => {
+  const answeredCount = getAnsweredCountForSubject(activeSubject);
+
+  if (answeredCount >= 5) {
+    setShowActivationModal(true);
+    return;
+  }
+
+  if (currentIndex < questions.length - 1) {
+    setCurrentIndex((i) => i + 1);
+  }
+};
+
   const goPrev = () => currentIndex > 0 && setCurrentIndex(i => i - 1);
 
   // Submit
@@ -160,6 +212,12 @@ const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
 });
 
   };
+  const getAnsweredCountForSubject = (subject) => {
+  return Object.keys(answers).filter(
+    (key) => key.startsWith(`${subject}-`)
+  ).length;
+};
+
 
   return (
    <div className="dashboard exam-dashboard">
@@ -287,6 +345,35 @@ const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
 </section>
 
       </main>
+
+      {showActivationModal && (
+  <div className="activation-modal-overlay">
+    <div className="activation-modal">
+      <h2>Activation Required</h2>
+      <p>
+        You have answered the free limit of 5 questions for this subject.
+        Activate the app to continue practicing.
+      </p>
+
+      <div className="modal-actions">
+        <button
+          className="cancel-btn"
+          onClick={() => setShowActivationModal(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="activate-btn"
+          onClick={() => navigate("/activate")}
+        >
+          Activate
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
