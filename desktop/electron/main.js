@@ -495,6 +495,15 @@ function initDatabase() {
     activated_at DATETIME
   )
 `).run();
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS license_keys (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    license_key TEXT UNIQUE,
+    is_used INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    used_at DATETIME
+  )
+`).run();
 
 }
 
@@ -518,6 +527,29 @@ ipcMain.handle("auth:register", async (_event, payload) => {
       return { status: 409, message: "Email already exists" };
     }
     return { status: 500, message: "Registration failed" };
+  }
+});
+function generateLicenseKey() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const block = () =>
+    Array.from({ length: 4 }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join("");
+
+  return `OGAPOS-${block()}-${block()}-${block()}`;
+}
+ipcMain.handle("admin:generate-license", () => {
+  const key = generateLicenseKey();
+
+  try {
+    db.prepare(`
+      INSERT INTO license_keys (license_key)
+      VALUES (?)
+    `).run(key);
+
+    return { status: 200, licenseKey: key };
+  } catch (err) {
+    return { status: 500, message: "Failed to generate key" };
   }
 });
 
@@ -571,37 +603,72 @@ ipcMain.handle("get-questions-for-subject", async (_event, subject, selectedTopi
   allQuestions.sort(() => Math.random() - 0.5);
   return allQuestions.slice(0, limit);
 });
+// ipcMain.handle("api:activate", async (_event, payload) => {
+//   const { licenseKey } = payload;
+
+//   try {
+//     if (!licenseKey) {
+//       return { status: 400, message: "License key is required" };
+//     }
+
+//     // 🔐 Example validation (replace with real logic later)
+//     const VALID_KEY = "OGAPOS-2025-ACTIVE";
+
+//     if (licenseKey !== VALID_KEY) {
+//       return { status: 401, message: "Invalid license key" };
+//     }
+
+//     // Save activation
+//     db.prepare(`
+//       INSERT INTO activation (license_key, is_active, activated_at)
+//       VALUES (?, 1, CURRENT_TIMESTAMP)
+//     `).run(licenseKey);
+
+//     return {
+//       status: 200,
+//       message: "Application activated successfully",
+//     };
+//   } catch (err) {
+//     return {
+//       status: 500,
+//       message: "Activation failed",
+//     };
+//   }
+// });
 ipcMain.handle("api:activate", async (_event, payload) => {
   const { licenseKey } = payload;
 
-  try {
-    if (!licenseKey) {
-      return { status: 400, message: "License key is required" };
-    }
-
-    // 🔐 Example validation (replace with real logic later)
-    const VALID_KEY = "OGAPOS-2025-ACTIVE";
-
-    if (licenseKey !== VALID_KEY) {
-      return { status: 401, message: "Invalid license key" };
-    }
-
-    // Save activation
-    db.prepare(`
-      INSERT INTO activation (license_key, is_active, activated_at)
-      VALUES (?, 1, CURRENT_TIMESTAMP)
-    `).run(licenseKey);
-
-    return {
-      status: 200,
-      message: "Application activated successfully",
-    };
-  } catch (err) {
-    return {
-      status: 500,
-      message: "Activation failed",
-    };
+  if (!licenseKey) {
+    return { status: 400, message: "License key is required" };
   }
+
+  // 1️⃣ Check if key exists and unused
+  const row = db.prepare(`
+    SELECT * FROM license_keys
+    WHERE license_key = ? AND is_used = 0
+  `).get(licenseKey);
+
+  if (!row) {
+    return { status: 401, message: "Invalid or already used license key" };
+  }
+
+  // 2️⃣ Activate app
+  db.prepare(`
+    INSERT INTO activation (license_key, is_active, activated_at)
+    VALUES (?, 1, CURRENT_TIMESTAMP)
+  `).run(licenseKey);
+
+  // 3️⃣ Mark key as used
+  db.prepare(`
+    UPDATE license_keys
+    SET is_used = 1, used_at = CURRENT_TIMESTAMP
+    WHERE license_key = ?
+  `).run(licenseKey);
+
+  return {
+    status: 200,
+    message: "Application activated successfully",
+  };
 });
 
 /* =========================
