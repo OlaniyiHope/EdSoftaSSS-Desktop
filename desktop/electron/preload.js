@@ -82,7 +82,8 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("auth:register", userData),
 activateApp: (licenseKey) =>
   ipcRenderer.invoke("api:activate", { licenseKey }),
-
+ activateWithPin: (data) =>
+    ipcRenderer.invoke("api:activate-with-pin", data),
   // =====================
   // EXAM SUBJECTS
   // =====================

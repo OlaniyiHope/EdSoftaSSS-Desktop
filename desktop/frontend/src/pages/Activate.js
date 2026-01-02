@@ -14,6 +14,8 @@ const Activate = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
   const [license, setLicense] = useState("");
+const [pin, setPin] = useState("");
+const [phoneNumber, setPhoneNumber] = useState("");
 
   const navigate = useNavigate();
 const activate = async () => {
@@ -36,6 +38,32 @@ const activate = async () => {
   }
 };
 
+const activateWithPin = async () => {
+  if (!pin.trim() || !phoneNumber.trim()) {
+    alert("PIN and phone number are required");
+    return;
+  }
+
+  const res = await window.api.activateWithPin({
+    pin,
+    phoneNumber,
+    platform: "desktop",
+  });
+
+  if (res.key) {
+    // backend returned activation key → activate app
+    const final = await window.api.activateApp(res.key);
+
+    if (final.status === 200) {
+      alert("Activated successfully");
+      navigate("/dashboard");
+    } else {
+      alert(final.message);
+    }
+  } else {
+    alert(res.message || "Invalid PIN");
+  }
+};
 
   return (
     <div className="dashboard">
@@ -125,9 +153,10 @@ const activate = async () => {
       <label>Phone Number</label>
       <input type="text" placeholder="Enter phone number" />
   
-<button className="activate-btn" onClick={activate}>
+<button className="activate-btn" onClick={activateWithPin}>
   Activate App
 </button>
+
 
   </div>
 )}
