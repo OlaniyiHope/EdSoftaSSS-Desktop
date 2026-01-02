@@ -84,6 +84,15 @@ activateApp: (licenseKey) =>
   ipcRenderer.invoke("api:activate", { licenseKey }),
  activateWithPin: (data) =>
     ipcRenderer.invoke("api:activate-with-pin", data),
+
+   getPlatform: () => {
+    const platform = process.platform;
+    if (platform === "darwin") return "macOs";
+    if (platform === "win32") return "windows";
+    if (platform === "linux") return "linux";
+    return "desktop"; // fallback
+  },
+
   // =====================
   // EXAM SUBJECTS
   // =====================

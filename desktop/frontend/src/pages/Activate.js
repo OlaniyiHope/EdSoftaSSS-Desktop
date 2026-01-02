@@ -18,23 +18,124 @@ const [pin, setPin] = useState("");
 const [phoneNumber, setPhoneNumber] = useState("");
 
   const navigate = useNavigate();
+// const activate = async () => {
+//   if (!license.trim()) {
+//     alert("Please enter an activation key");
+//     return;
+//   }
+
+//   const res = await window.api.activateApp(license);
+
+//   if (res.status === 200) {
+//     localStorage.setItem("isActivated", "true");
+//     localStorage.setItem("activationKey", license);
+
+//     alert("Activated successfully");
+
+//     navigate("/dashboard"); // or wherever
+//   } else {
+//     alert(res.message);
+//   }
+// };
+
+// const activateWithPin = async () => {
+//   if (!pin.trim() || !phoneNumber.trim()) {
+//     alert("PIN and phone number are required");
+//     return;
+//   }
+
+//   const res = await window.api.activateWithPin({
+//     pin,
+//     phoneNumber,
+//     platform: "desktop",
+//   });
+
+//   if (res.key) {
+//     // backend returned activation key → activate app
+//     const final = await window.api.activateApp(res.key);
+
+//     if (final.status === 200) {
+//       alert("Activated successfully");
+//       navigate("/dashboard");
+//     } else {
+//       alert(final.message);
+//     }
+//   } else {
+//     alert(res.message || "Invalid PIN");
+//   }
+// };
+
+
+
+
+
+// const activateWithPin = async () => {
+//   if (!pin.trim() || !phoneNumber.trim()) {
+//     alert("PIN and phone number are required");
+//     return;
+//   }
+
+//   const res = await window.api.activateWithPin({
+//     pin,
+//     phoneNumber,
+//     platform: "desktop",
+//   });
+
+//   if (res.key) {
+//     try {
+//       // Try to finalize activation
+//       const final = await window.api.activateApp(res.key);
+
+//       if (final.status === 200) {
+//         alert("Activated successfully");
+//         navigate("/dashboard");
+//       } else {
+//         // If final activation fails, ignore crash and still allow
+//         console.warn("Activation step failed:", final.message);
+//         alert(
+//           "PIN accepted. Activation may not be finalized, but you can continue."
+//         );
+//         navigate("/dashboard");
+//       }
+//     } catch (err) {
+//       console.error("Error finalizing activation:", err);
+//       alert(
+//         "PIN accepted. Activation may not be finalized, but you can continue."
+//       );
+//       navigate("/dashboard");
+//     }
+//   } else {
+//     alert(res.message || "Invalid PIN");
+//   }
+// };
+
 const activate = async () => {
   if (!license.trim()) {
     alert("Please enter an activation key");
     return;
   }
 
-  const res = await window.api.activateApp(license);
+  try {
+    const res = await window.api.activateApp(license);
 
-  if (res.status === 200) {
-    localStorage.setItem("isActivated", "true");
-    localStorage.setItem("activationKey", license);
-
-    alert("Activated successfully");
-
-    navigate("/dashboard"); // or wherever
-  } else {
-    alert(res.message);
+    if (res.status) {
+      alert(
+        `Activation successful!\nActivation Key: ${res.key || license}\nMessage: ${res.message}`
+      );
+      localStorage.setItem("isActivated", "true");
+      localStorage.setItem("activationKey", license);
+      navigate("/dashboard");
+    } else {
+      // fallback if server returned invalid response
+      alert(
+        `Activation failed or server returned invalid response.\nYou can try again later.`
+      );
+    }
+  } catch (err) {
+    console.error("Activation error:", err);
+    alert(
+      `Activation failed: ${err.message}\nYou can try using the PIN option.`
+    );
   }
 };
 
@@ -44,26 +145,23 @@ const activateWithPin = async () => {
     return;
   }
 
-  const res = await window.api.activateWithPin({
-    pin,
-    phoneNumber,
-    platform: "desktop",
-  });
+  try {
+    const res = await window.api.activateWithPin({ pin, phoneNumber });
 
-  if (res.key) {
-    // backend returned activation key → activate app
-    const final = await window.api.activateApp(res.key);
-
-    if (final.status === 200) {
-      alert("Activated successfully");
+    if (res.key) {
+      alert(`PIN accepted!\nActivation Key: ${res.key}\nMessage: ${res.message}`);
+      localStorage.setItem("isActivated", "true");
+      localStorage.setItem("activationKey", res.key);
       navigate("/dashboard");
     } else {
-      alert(final.message);
+      alert(res.message || "Invalid PIN or server error");
     }
-  } else {
-    alert(res.message || "Invalid PIN");
+  } catch (err) {
+    console.error("Activation with PIN error:", err);
+    alert("Network error or invalid response from server");
   }
 };
+
 
   return (
     <div className="dashboard">
@@ -146,12 +244,24 @@ const activateWithPin = async () => {
 
   
       <label>Enter PIN</label>
-      <input type="text" placeholder="Enter PIN" />
+<input
+  type="text"
+  placeholder="Enter PIN"
+  value={pin}
+  onChange={(e) => setPin(e.target.value)}
+/>
+
   
 
    
       <label>Phone Number</label>
-      <input type="text" placeholder="Enter phone number" />
+  <input
+  type="text"
+  placeholder="Enter phone number"
+  value={phoneNumber}
+  onChange={(e) => setPhoneNumber(e.target.value)}
+/>
+
   
 <button className="activate-btn" onClick={activateWithPin}>
   Activate App
