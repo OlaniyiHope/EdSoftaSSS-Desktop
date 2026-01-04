@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
+import AddUser from "./AddUser";
+import "./admin.css";
+import TopicModal from "./TopicModal";
+import { useNavigate } from "react-router-dom";
 import {
   FaBell,
   FaCog,
   FaHome,
   FaNewspaper,
+  FaSignOutAlt,
   FaStickyNote
 } from "react-icons/fa";
-import AddUser from "./AddUser";
-import "./admin.css";
-import TopicModal from "./TopicModal";
-import { useNavigate } from "react-router-dom";
-
+import useAuth from "../hooks/useAuth";
 const Start = () => {
   const [activeTab, setActiveTab] = useState("key");
   const [showModal, setShowModal] = useState(false);
@@ -220,7 +221,11 @@ const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
     (key) => key.startsWith(`${subject}-`)
   ).length;
 };
-
+ const { logout } = useAuth()
+   const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
    <div className="dashboard exam-dashboard">
@@ -236,7 +241,9 @@ const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
             />
              <span> {username || "User"}</span>
           </div>
-          <button className="logout-btn">Log out</button>
+            <button className="logout-btn" onClick={handleLogout}>
+                 <FaSignOutAlt /> Log out
+               </button>
         </div>
 
         <div className="timer-box">

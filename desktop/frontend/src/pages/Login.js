@@ -33,17 +33,33 @@ const Login = () => {
   const { login } = useAuth();
 
   const apiUrl = process.env.REACT_APP_API_URL;
+  // const handleFormSubmit = async (values) => {
+  //   setLoading(true);
+  //   try {
+  //     await login(values.email, values.password);
+  //     toast.success("Login successful!");
+  //     navigate("/dashboard");
+  //   } catch (e) {
+  //     toast.error("An error occurred during login.");
+  //     setLoading(false);
+  //   }
+  // };
   const handleFormSubmit = async (values) => {
-    setLoading(true);
-    try {
-      await login(values.email, values.password);
-      toast.success("Login successful!");
-      navigate("/dashboard");
-    } catch (e) {
-      toast.error("An error occurred during login.");
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const loggedInUser = await login(values.email, values.password);
+    toast.success("Login successful!");
+
+    // Update App state by storing user in localStorage and refreshing user state
+    localStorage.setItem("user", JSON.stringify(loggedInUser));
+    // Navigate after login
+    navigate("/dashboard");
+  } catch (e) {
+    toast.error("An error occurred during login.");
+    setLoading(false);
+  }
+};
+
    return (
    <>
      <ToastContainer position="top-center" />
@@ -58,7 +74,7 @@ const Login = () => {
          </div>
  
          <div className="auth-toggle">
-           <button className="active">Sign Up</button>
+           <button className="active" onClick={() => navigate("/register")}> Sign Up</button>
            <button onClick={() => navigate("/login")}>Sign In</button>
          </div>
        </div>
@@ -106,17 +122,27 @@ const Login = () => {
  
               
  
-                 <div className="form-group">
-                   <label>Password</label>
-                   <input
-                     type={showPassword ? "text" : "password"}
-                     name="password"
-                     value={values.password}
-                     onChange={handleChange}
-                     onBlur={handleBlur}
-                   />
-                 </div>
+          
  
+
+     <div className="form-group password-group">
+  <label>Password</label>
+
+  <div className="password-input-wrapper">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      value={values.password}
+   onChange={handleChange}
+                     onBlur={handleBlur}
+    />
+
+    <i
+      className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+      onClick={() => setShowPassword(!showPassword)}
+    />
+  </div>
+</div>
                
                  <div className="submit-row">
                    <button type="submit" disabled={loading}>

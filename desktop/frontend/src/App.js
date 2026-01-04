@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import About from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
 import All from "./pages/All";
@@ -30,23 +31,34 @@ import Start from "./pages/Start";
 import PerHistory from "./pages/PerHistory";
 import StudyMat from "./pages/StudyMat";
 
+
 const App = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+     const [user, setUser] = useState(null);
+
+  // Load user from localStorage on app start
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/cbt" element={<Cbt />} />
-    <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Practice />} />
-        <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
+ <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Home />} />
+<Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" />} />
+
           <Route path="/recommendation" element={<Recommend />} />
           <Route path="/ask" element={<Ask />} />
-          <Route path="/home" element={<Home />} />
+
         
          
           <Route path="/study" element={<Study />} />
           <Route path="/practice-exam" element={<PracticeExam />} />
+          <Route path="/practice" element={<Practice />} />
           <Route path="/study-material" element={<StudyMat />} />
           <Route path="/dashboards" element={<AdminDashboard />} />
           <Route path="/practice-for-utme" element={<All />} />

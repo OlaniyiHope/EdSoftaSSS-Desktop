@@ -35,6 +35,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register } = useAuth();
 const handleFormSubmit = async (values) => {
@@ -59,7 +60,7 @@ const handleFormSubmit = async (values) => {
     if (response.status === 201) {
       toast.success("Registration successful!");
       setTimeout(() => {
-        navigate("/dashboard", { replace: true });
+        navigate("/login", { replace: true });
       }, 1000);
     } else if (response.status === 409) {
       toast.error("Email already exists!");
@@ -215,32 +216,54 @@ const handleFormSubmit = async (values) => {
         />
       </div>
 
-      <div className="form-group">
-        <label>Password</label>
-        <input
-          type={showPassword ? "text" : "password"}
-          name="password"
-          value={values.password}
-          onChange={(e) => {
-            console.log("Typing in password:", e.target.value);
-            handleChange(e);
-          }}
-          onBlur={(e) => {
-            console.log("Blurred password:", e.target.value);
-            handleBlur(e);
-          }}
-        />
-      </div>
+     <div className="form-group password-group">
+  <label>Password</label>
 
-      <div className="form-group">
-        <label>Confirm Password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          onChange={(e) => console.log("Typing in confirm password:", e.target.value)}
-          onBlur={(e) => console.log("Blurred confirm password:", e.target.value)}
-        />
-      </div>
+  <div className="password-input-wrapper">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      value={values.password}
+      onChange={(e) => {
+        console.log("Typing in password:", e.target.value);
+        handleChange(e);
+      }}
+      onBlur={(e) => {
+        console.log("Blurred password:", e.target.value);
+        handleBlur(e);
+      }}
+    />
+
+    <i
+      className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+      onClick={() => setShowPassword(!showPassword)}
+    />
+  </div>
+</div>
+
+
+   <div className="form-group password-group">
+  <label>Confirm Password</label>
+
+  <div className="password-input-wrapper">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      name="confirmPassword"
+      onChange={(e) =>
+        console.log("Typing in confirm password:", e.target.value)
+      }
+      onBlur={(e) =>
+        console.log("Blurred confirm password:", e.target.value)
+      }
+    />
+
+    <i
+      className={`fa ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+    />
+  </div>
+</div>
+
 
       <div className="submit-row">
         <button

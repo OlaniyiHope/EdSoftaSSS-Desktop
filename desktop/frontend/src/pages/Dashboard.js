@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModals, setShowModals] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
-
+ const { logout } = useAuth()
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -113,6 +113,11 @@ useEffect(() => {
     setUsername(user.username); // or fullname if you want full name
   }
 }, []);
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
 
  return (
   <div className="dashboard">
@@ -161,9 +166,9 @@ useEffect(() => {
           </p> */}
         </div>
 
-        <button className="logout">
-          <FaSignOutAlt /> Log out
-        </button>
+        <button className="logout" onClick={handleLogout}>
+        <FaSignOutAlt /> Log out
+      </button>
       </header>
 
            <p className="subtitle">

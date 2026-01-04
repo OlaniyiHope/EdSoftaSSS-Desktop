@@ -1122,7 +1122,7 @@ body {
 }
 
 /* RIGHT — 20% */
-.practice-right {
+.practice-rights {
   flex: 1;
 }
 
@@ -1824,7 +1824,7 @@ body {
 }
 
 /* RIGHT */
-.practice-right {
+.practice-rights {
   flex: 1;
   background: #fff;
   padding: 20px;

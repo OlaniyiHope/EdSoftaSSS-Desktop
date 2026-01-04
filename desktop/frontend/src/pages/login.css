@@ -137,3 +137,25 @@
   cursor: pointer;
   font-size: 14px;
 }
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* space for eye icon */
+}
+
+.password-input-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 14px;
+}
+
+.password-input-wrapper i:hover {
+  color: #0366d6;
+}
