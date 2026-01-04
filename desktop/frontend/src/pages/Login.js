@@ -1,6 +1,6 @@
 import "font-awesome/css/font-awesome.min.css";
 import { Formik } from "formik";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +8,7 @@ import useAuth from "../hooks/useAuth";
 import "./login.css";
 
 import * as Yup from "yup";
+import { AuthContext } from "../contexts/AuthContext";
 // inital login credentials
 const initialValues = {
   email: "",
@@ -31,6 +32,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
+const { loginUser } = useContext(AuthContext); // 👈 ADD THIS
 
   const apiUrl = process.env.REACT_APP_API_URL;
   // const handleFormSubmit = async (values) => {
@@ -44,15 +46,30 @@ const Login = () => {
   //     setLoading(false);
   //   }
   // };
-  const handleFormSubmit = async (values) => {
+//   const handleFormSubmit = async (values) => {
+//   setLoading(true);
+//   try {
+//     const loggedInUser = await login(values.email, values.password);
+//     toast.success("Login successful!");
+
+//     // Update App state by storing user in localStorage and refreshing user state
+//     localStorage.setItem("user", JSON.stringify(loggedInUser));
+//     // Navigate after login
+//     navigate("/dashboard");
+//   } catch (e) {
+//     toast.error("An error occurred during login.");
+//     setLoading(false);
+//   }
+// };
+const handleFormSubmit = async (values) => {
   setLoading(true);
   try {
     const loggedInUser = await login(values.email, values.password);
-    toast.success("Login successful!");
 
-    // Update App state by storing user in localStorage and refreshing user state
-    localStorage.setItem("user", JSON.stringify(loggedInUser));
-    // Navigate after login
+    // ✅ update context state
+    loginUser(loggedInUser);
+
+    toast.success("Login successful!");
     navigate("/dashboard");
   } catch (e) {
     toast.error("An error occurred during login.");

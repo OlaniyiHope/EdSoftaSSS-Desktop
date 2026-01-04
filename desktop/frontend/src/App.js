@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import About from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
 import All from "./pages/All";
@@ -30,18 +30,12 @@ import Topic from "./pages/Topic";
 import Start from "./pages/Start";
 import PerHistory from "./pages/PerHistory";
 import StudyMat from "./pages/StudyMat";
+import { AuthContext } from "./contexts/AuthContext";
 
 
 const App = () => {
-     const [user, setUser] = useState(null);
+  const { user } = useContext(AuthContext); // ✅ single source of truth
 
-  // Load user from localStorage on app start
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   return (
     <>

@@ -25,10 +25,14 @@ function normalizeProductKey(raw) {
 /* =========================
    CREATE WINDOW
 ========================= */
+
+app.setName("EdSofta App"); // 👈 APP DISPLAY NAME
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
+      icon: __dirname + "/assets/edlogo.jpg",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,

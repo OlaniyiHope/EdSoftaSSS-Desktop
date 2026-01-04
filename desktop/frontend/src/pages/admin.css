@@ -2377,3 +2377,9 @@ body {
   padding: 10px 16px;
   border-radius: 6px;
 }
+.study-content .content-body img {
+  max-width: 300px;   /* 👈 adjust this value */
+  height: auto;
+  display: block;
+  margin: 16px auto;  /* center it nicely */
+}
