@@ -19,5 +19,23 @@
     "better-sqlite3": "^12.5.0",
     "node-machine-id": "^1.1.12",
     "sqlite3": "^5.1.7"
+  },
+
+  "build": {
+    "appId": "com.edsofta.desktop",
+    "productName": "EdSofta App",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+"win": {
+  "icon": "assets/edlogo.ico"
+},
+"mac": {
+  "icon": "assets/edlogo.icns"
+}
+
   }
 }
