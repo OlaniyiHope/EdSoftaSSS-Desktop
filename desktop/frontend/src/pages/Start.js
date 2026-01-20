@@ -235,7 +235,7 @@ const scorePercent = Math.round((scoredMarks / totalMarks) * 100);
           <span className="label">Current user</span>
           <div className="user-info">
             <img
-              src="https://i.pravatar.cc/40"
+          
               alt="user"
               className="user-avatar"
             />

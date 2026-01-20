@@ -86,7 +86,8 @@ const handleFormSubmit = async (values) => {
        {/* TOP BAR */}
        <div className="register-topbar">
          <div className="topbar-left">
-           <span className="back-arrow">←</span>
+<span className="back-arrow" onClick={() => navigate("/")}>←</span>
+
            <span className="app-title">EdSofta Desktop</span>
          </div>
  
@@ -97,16 +98,13 @@ const handleFormSubmit = async (values) => {
        </div>
  
        {/* MAIN CONTENT */}
-       <div className="register-content">
+       <div className="login-content">
  
          {/* LEFT TEXT */}
-         <div className="register-left">
-           <h1>Welcome Back</h1>
-           <p>Sign in to your account below</p>
-         </div>
- 
-         {/* RIGHT FORM */}
-         <div className="register-right">
+   <div className="login-card">
+  <h1 className="login-title">Welcome back</h1>
+  <p className="login-subtitle">Sign in to your account below.</p>
+
            <Formik
              initialValues={initialValues}
              validationSchema={validationSchema}
@@ -120,7 +118,7 @@ const handleFormSubmit = async (values) => {
                handleBlur,
                handleSubmit,
              }) => (
-               <form onSubmit={handleSubmit} className="register-form">
+               <form onSubmit={handleSubmit} className="register-form2">
  
         
  
@@ -141,6 +139,17 @@ const handleFormSubmit = async (values) => {
  
           
  
+{/* <div className="user-chip">
+  <div className="user-left">
+    <div className="user-avatar">👤</div>
+    <div>
+      <div className="user-name">Boluwatife</div>
+      <div className="user-role">Admin</div>
+    </div>
+  </div>
+
+  <span className="remove-user">✕</span>
+</div> */}
 
      <div className="form-group password-group">
   <label>Password</label>
@@ -161,7 +170,7 @@ const handleFormSubmit = async (values) => {
   </div>
 </div>
                
-                 <div className="submit-row">
+                 <div className="submit2-row">
                    <button type="submit" disabled={loading}>
                      {loading ? "Submitting..." : "Submit"}
                    </button>

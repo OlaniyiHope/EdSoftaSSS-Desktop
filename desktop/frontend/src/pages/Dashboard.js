@@ -19,6 +19,15 @@ import useAuth from "../hooks/useAuth";
 import AddUser from "./AddUser";
 import "./admin.css";
 import { useSidebar } from "./SidebarProvider";
+import practiceIcon from "./practiceicon/p1.png";
+import studyIcon from "./practiceicon/p2.png";
+import gamesIcon from "./practiceicon/p3.png";
+import savedIcon from "./practiceicon/p4.png";
+import searchIcon from "./practiceicon/p5.png";
+import joinIcon from "./practiceicon/p6.png";
+import forumIcon from "./practiceicon/p7.png";
+
+
 const Dashboard = () => {
   const { user } = useAuth(); // Access the authenticated user
   const [points, setPoints] = useState([]);
@@ -84,15 +93,15 @@ function FeatureCard({ title, active }) {
   };
 
   const boxColors = [
-    "#dc3545", // Red
-    "#0d3978", // Dark Blue
-    "#007bff", // Blue
-    "#28a745", // Green
-    "#ffc107", // Yellow
-    "#6610f2", // Purple
-    "#17a2b8", // Teal
-    "#fd7e14", // Orange
-    "#6c757d", // Gray
+    "#f4f4f4", // Red
+    "#f4f4f4", // Dark Blue
+    "#f4f4f4", // Blue
+    "#f4f4f4", // Green
+    "#f4f4f4", // Yellow
+    "#f4f4f4", // Purple
+    "#f4f4f4", // Teal
+    "#f4f4f4", // Orange
+    "#f4f4f4", // Gray
   ];
   const handleClick = (title) => {
     if (title === "Practice for UTME") {
@@ -186,10 +195,11 @@ useEffect(() => {
     <div className="grid-label">Offline Features</div>
 
     {[
-      { icon: "fas fa-book", title: "Practice for UTME" },
-      { icon: "fas fa-feather-alt", title: "Read/Listen to Study Material" },
-      { icon: "fas fa-graduation-cap", title: "Play Games" },
-      { icon: "fas fa-university", title: "Saved Question" },
+  { icon: practiceIcon, title: "Practice for UTME" },
+  { icon: studyIcon, title: "Read/Listen to Study Material" },
+  { icon: gamesIcon, title: "Play Games" },
+  { icon: savedIcon, title: "Saved Question" },
+
     ].map((item, index) => (
       <div
         key={`offline-${index}`}
@@ -198,9 +208,15 @@ useEffect(() => {
         onClick={() => handleClick(item.title)}
       >
         <div className="box-icon">
-          <i className={item.icon} />
+     <img
+  src={item.icon}
+  alt={item.title}
+  className="grid-icon"
+   style={{width: "30px", height: "30px"}}
+/>
+
         </div>
-        <h6>{item.title}</h6>
+        <h6 style={{color: "black"}}>{item.title}</h6>
       </div>
     ))}
 
@@ -208,9 +224,16 @@ useEffect(() => {
     <div className="grid-label">Online Features</div>
 
     {[
-      { icon: "fas fa-chalkboard-teacher", title: "Search for Tutors" },
-      { icon: "fas fa-microscope", title: "Join Forum" },
-      { icon: "fas fa-globe", title: "See Learning Recommendation" },
+      // { icon: "fas fa-chalkboard-teacher", title: "Search for Tutors" },
+      // { icon: "fas fa-microscope", title: "Join Forum" },
+      // { icon: "fas fa-globe", title: "See Learning Recommendation" },
+
+    
+  { icon: searchIcon, title: "Search for Tutors" },
+  { icon: joinIcon, title: "Join Forum" },
+  { icon: forumIcon, title: "See Learning Recommendation" },
+
+
     ].map((item, index) => (
       <div
         key={`online-${index}`}
@@ -219,9 +242,15 @@ useEffect(() => {
         onClick={() => handleClick(item.title)}
       >
         <div className="box-icon">
-          <i className={item.icon} />
+        <img
+  src={item.icon}
+  alt={item.title}
+  className="grid-icon"
+  style={{width: "30px", height: "30px"}}
+/>
+
         </div>
-        <h6>{item.title}</h6>
+        <h6 style={{color: "black"}}>{item.title}</h6>
       </div>
     ))}
 
@@ -234,11 +263,11 @@ useEffect(() => {
         <aside className="right-section">
           <div className="promo-card">
             <div className="circle">SSCE</div>
-            <h4>More from Edsofta</h4>
+            <h4>More from Edu Pro Solution</h4>
             <p>
               Get practicing with our prep app for your WAEC/SSCE exam.
             </p>
-            <button className="primary-btn small">Download app</button>
+            <button className="primary-btn small" style={{backgroundColor: "#0366D6"}}>Download app</button>
           </div>
 
           <div className="report-card">

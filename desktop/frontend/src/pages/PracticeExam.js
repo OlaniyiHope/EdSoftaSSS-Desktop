@@ -11,9 +11,9 @@ import {
 } from "react-icons/fa";
 import "./admin.css";
 import { useNavigate } from "react-router-dom";
-
+import imgg from "./practiceicon/p1.png";
 const PracticeExam = () => {
-  const [withTimer, setWithTimer] = useState(false);
+  const [withTimer, setWithTimer] = useState(true);
   const [hours, setHours] = useState(30);
   const [minutes, setMinutes] = useState(0);
   const navigate = useNavigate();
@@ -50,8 +50,14 @@ const PracticeExam = () => {
         <div className="practice-layout">
           {/* LEFT */}
           <section className="practice-left">
+
             <div className="intro-box">
-              <div className="intro-icon">📄✏️</div>
+                              <img
+  src={imgg}
+
+  className="grid-icon"
+   style={{width: "150px", height: "150px", margin: "auto"}}
+/>
               <p>
                 Take tests from a very robust repository of contents,
                 with preferred settings and filters.
@@ -75,20 +81,20 @@ const PracticeExam = () => {
                   <div className="time-group">
                     <label>Hours</label>
                     <div className="time-control">
-                      <button onClick={() => setHours(h => h + 1)}>▲</button>
-                      <span>{hours}</span>
-                      <button onClick={() => setHours(h => Math.max(h - 1, 0))}>▼</button>
+                      <button onClick={() => setHours(h => h + 1)}  style={{ color: '#0366D6' }} >▲</button>
+                      <span  style={{ color: '#0366D6' }} >{hours}</span>
+                      <button onClick={() => setHours(h => Math.max(h - 1, 0))}  style={{ color: '#0366D6' }} >▼</button>
                     </div>
                   </div>
 
-                  <span className="colon">:</span>
+                  <span className="colon"  style={{ color: '#0366D6' }} >:</span>
 
                   <div className="time-group">
                     <label>Minutes</label>
                     <div className="time-control">
-                      <button onClick={() => setMinutes(m => (m + 1) % 60)}>▲</button>
-                      <span>{minutes.toString().padStart(2, "0")}</span>
-                      <button onClick={() => setMinutes(m => (m - 1 + 60) % 60)}>▼</button>
+                      <button onClick={() => setMinutes(m => (m + 1) % 60)}  style={{ color: '#0366D6' }} >▲</button>
+                      <span  style={{ color: '#0366D6' }} >{minutes.toString().padStart(2, "0")}</span>
+                      <button onClick={() => setMinutes(m => (m - 1 + 60) % 60)}  style={{ color: '#0366D6' }} > ▼</button>
                     </div>
                   </div>
                 </div>
@@ -113,6 +119,7 @@ const PracticeExam = () => {
         <button
       className="primary-btn"
       onClick={() => navigate("/topic")}
+      style={{backgroundColor: "#0366D6"}}
     >
       Practice by Subject
     </button>
@@ -121,7 +128,7 @@ const PracticeExam = () => {
               2. Select subjects, number and year of previous questions of your choice.
             </p>
 
-            <button className="primary-btn outline">Practice by Year</button>
+            <button className="primary-btn outline"       style={{backgroundColor: "#0366D6", color: "white"}}>Practice by Year</button>
           </aside>
         </div>
       </main>

@@ -49,7 +49,7 @@ const TopicModal = ({ open, onClose, subject, topics, onSubmit }) => {
               checked={selectedTopics.length === topics.length && topics.length > 0}
               onChange={handleSelectAll}
             />
-            <span>Select All</span>
+            <span style={{color: "black"}}>Select All</span>
           </label>
         </div>
 
@@ -61,14 +61,14 @@ const TopicModal = ({ open, onClose, subject, topics, onSubmit }) => {
                 checked={selectedTopics.includes(topic)}
                 onChange={() => handleCheckboxChange(topic)}
               />
-              <span>{topic}</span>
+              <span style={{color: "black"}}>{topic}</span>
             </label>
           ))}
         </div>
 
         <div className="modal-actions">
           <button className="secondary-btn" onClick={onClose}>Cancel</button>
-          <button className="primary-btn" onClick={handleSubmit}>Done</button>
+          <button className="primary-btn" onClick={handleSubmit} style={{backgroundColor: "#0366D6"}}>Done</button>
         </div>
       </div>
     </div>

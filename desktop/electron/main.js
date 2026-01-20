@@ -276,43 +276,7 @@ function getOrCreateProductKey() {
   }
 }
 
-// function getProductKey() {
-//   try {
-//     const filePath = path.join(app.getPath("userData"), "activation.json");
-//     if (!fs.existsSync(filePath)) return null;
 
-//     const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-//     return data.productKey || null;
-//   } catch (err) {
-//     console.error("[getProductKey] Error reading productKey:", err);
-//     return null;
-//   }
-// }
-
-
-// ipcMain.handle("api:activate", async (_event, { licenseKey }) => {
-//   const deviceId = getDeviceId();
-//   const productKey = normalizeProductKey(deviceId.replaceAll("-", ""));
-
-//   const res = await fetch("https://edsofta.com/api/user/activate", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({
-//       activationKey: licenseKey,
-//       productKey,
-//       platform: "desktop",
-//     }),
-//   });
-
-//   const data = await res.json();
-
-//   if (!res.ok) {
-//     return { status: false, message: data.message };
-//   }
-
-//   saveActivationLocally(data);
-//   return { status: true };
-// });
 // ipcMain.handle("api:activate", async (_event, { licenseKey }) => {
 //   try {
 //     const deviceId = getDeviceId();
@@ -321,22 +285,21 @@ function getOrCreateProductKey() {
 //                    process.platform === "win32" ? "windows" :
 //                    process.platform === "linux" ? "linux" : "desktop";
 
-//     const res = await fetch("https://edsofta.com/api/user/activate", {
+//     const res = await fetch("http://localhost:5001/api/user/activate", {
 //       method: "POST",
 //       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         activationKey: licenseKey,
-//         productKey,
-//         client,
-//       }),
+//       body: JSON.stringify({ activationKey: licenseKey, productKey, client }),
 //     });
 
 //     const text = await res.text();
-//     if (!text || text.trim() === "") {
-//       return { status: false, message: "Activation server returned empty response" };
-//     }
 
-//     const data = JSON.parse(text);
+//     let data;
+//     try {
+//       data = JSON.parse(text);
+//     } catch (err) {
+//       console.error("[Activate] Failed to parse JSON:", text);
+//       return { status: false, message: "Server returned invalid response" };
+//     }
 
 //     if (!res.ok) {
 //       return { status: false, message: data.message || "Activation failed" };
@@ -346,10 +309,92 @@ function getOrCreateProductKey() {
 //     return data;
 
 //   } catch (err) {
-//     console.error("[Activate] Error:", err);
+//     console.error("[Activate] Network error:", err);
 //     return { status: false, message: "Network error: " + err.message };
 //   }
 // });
+
+// function saveActivationLocally(data) {
+//   const filePath = path.join(app.getPath("userData"), "activation.json");
+
+//   let existing = {};
+//   if (fs.existsSync(filePath)) {
+//     existing = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+//   }
+
+//   const file = {
+//     ...existing,
+//     // token: data.token,
+//       token: data.activationKey,
+//     activatedAt: Date.now(),
+//     expiresAt: data.expiresAt,
+//     deviceId: data.deviceId,
+//   };
+
+//   fs.writeFileSync(filePath, JSON.stringify(file));
+// }
+
+
+// ipcMain.handle("api:activate-with-pin", async (_event, payload) => {
+//   try {
+//     console.log("[ActivateWithPin] Payload:", payload);
+
+//     const productKey = getOrCreateProductKey();
+//     console.log("[ActivateWithPin] Product Key:", productKey);
+
+//     if (!productKey) {
+//       return { status: false, message: "Product key not found" };
+//     }
+
+//     // Detect platform dynamically
+//     const client = process.platform === "darwin" ? "macOs" :
+//                    process.platform === "win32" ? "windows" :
+//                    process.platform === "linux" ? "linux" : "desktop";
+
+//     const res = await fetch("http://localhost:5001/api/user/activate", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         pin: payload.pin,
+//         phoneNumber: payload.phoneNumber,
+//         type: "pin",
+//         client,
+//         productCode: process.env.PRODUCT_CODE || "EDS1500",
+//         productKey,
+//       }),
+//     });
+
+//     console.log("[ActivateWithPin] HTTP status:", res.status);
+
+//     const text = await res.text();
+//     console.log("[ActivateWithPin] Raw response:", text);
+
+//     if (!text || text.trim() === "") {
+//       return { status: false, message: "Activation server returned empty response" };
+//     }
+
+//     let data;
+//     try {
+//       data = JSON.parse(text);
+//     } catch (err) {
+//       console.error("[ActivateWithPin] JSON parse error:", err);
+//       return { status: false, message: "Invalid response from activation server" };
+//     }
+
+//     if (!res.ok) {
+//       return { status: false, message: data.message || "Activation failed" };
+//     }
+
+//     console.log("[ActivateWithPin] Parsed response:", data);
+//     return data;
+
+//   } catch (err) {
+//     console.error("[ActivateWithPin] Network error:", err);
+//     return { status: false, message: "Network error: " + err.message };
+//   }
+// });
+
+
 
 ipcMain.handle("api:activate", async (_event, { licenseKey }) => {
   try {
@@ -359,72 +404,38 @@ ipcMain.handle("api:activate", async (_event, { licenseKey }) => {
                    process.platform === "win32" ? "windows" :
                    process.platform === "linux" ? "linux" : "desktop";
 
-    const res = await fetch("https://edsofta.com/api/user/activate", {
+    const res = await fetch("http://localhost:5001/api/user/activate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ activationKey: licenseKey, productKey, client }),
     });
 
     const text = await res.text();
-
     let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      console.error("[Activate] Failed to parse JSON:", text);
-      return { status: false, message: "Server returned invalid response" };
-    }
+    try { data = JSON.parse(text); } 
+    catch (err) { return { status: false, message: "Server returned invalid JSON" }; }
 
     if (!res.ok) {
       return { status: false, message: data.message || "Activation failed" };
     }
 
     saveActivationLocally(data);
-    return data;
-
+    return { status: true, activationKey: data.activationKey }; // <-- Always return activationKey
   } catch (err) {
-    console.error("[Activate] Network error:", err);
-    return { status: false, message: "Network error: " + err.message };
+    return { status: false, message: err.message };
   }
 });
 
-function saveActivationLocally(data) {
-  const filePath = path.join(app.getPath("userData"), "activation.json");
-
-  let existing = {};
-  if (fs.existsSync(filePath)) {
-    existing = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  }
-
-  const file = {
-    ...existing,
-    token: data.token,
-    activatedAt: Date.now(),
-    expiresAt: data.expiresAt,
-    deviceId: data.deviceId,
-  };
-
-  fs.writeFileSync(filePath, JSON.stringify(file));
-}
-
-
 ipcMain.handle("api:activate-with-pin", async (_event, payload) => {
   try {
-    console.log("[ActivateWithPin] Payload:", payload);
-
     const productKey = getOrCreateProductKey();
-    console.log("[ActivateWithPin] Product Key:", productKey);
+    if (!productKey) return { status: false, message: "Product key not found" };
 
-    if (!productKey) {
-      return { status: false, message: "Product key not found" };
-    }
-
-    // Detect platform dynamically
     const client = process.platform === "darwin" ? "macOs" :
                    process.platform === "win32" ? "windows" :
                    process.platform === "linux" ? "linux" : "desktop";
 
-    const res = await fetch("https://edsofta.com/api/user/activate", {
+    const res = await fetch("http://localhost:5001/api/user/activate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -437,107 +448,32 @@ ipcMain.handle("api:activate-with-pin", async (_event, payload) => {
       }),
     });
 
-    console.log("[ActivateWithPin] HTTP status:", res.status);
-
     const text = await res.text();
-    console.log("[ActivateWithPin] Raw response:", text);
-
-    if (!text || text.trim() === "") {
-      return { status: false, message: "Activation server returned empty response" };
-    }
-
     let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      console.error("[ActivateWithPin] JSON parse error:", err);
-      return { status: false, message: "Invalid response from activation server" };
-    }
+    try { data = JSON.parse(text); } 
+    catch (err) { return { status: false, message: "Server returned invalid JSON" }; }
 
-    if (!res.ok) {
-      return { status: false, message: data.message || "Activation failed" };
-    }
+    if (!res.ok) return { status: false, message: data.message || "Activation failed" };
 
-    console.log("[ActivateWithPin] Parsed response:", data);
-    return data;
-
+    saveActivationLocally(data);
+    return { status: true, activationKey: data.activationKey }; // <-- Return activationKey
   } catch (err) {
-    console.error("[ActivateWithPin] Network error:", err);
-    return { status: false, message: "Network error: " + err.message };
+    return { status: false, message: err.message };
   }
 });
 
-
-// ipcMain.handle("api:activate-with-pin", async (_e, payload) => {
-//   try {
-//     console.log("[ActivateWithPin] Payload:", payload);
-
-//     const productKey = getOrCreateProductKey();
-//     console.log("[ActivateWithPin] Product Key:", productKey);
-
-//     if (!productKey) {
-//       return { status: false, message: "Product key not found" };
-//     }
-
-//     const res = await fetch("https://edsofta.com/api/user/activate", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         pin: payload.pin,
-//         phoneNumber: payload.phoneNumber,
-//         type: "pin",
-//         client: "desktop",
-//         productCode: process.env.PRODUCT_CODE || "DEFAULT_CODE",
-//         productKey,
-//       }),
-//     });
-
-//     console.log("[ActivateWithPin] HTTP status:", res.status);
-
-//     const text = await res.text();
-//     console.log("[ActivateWithPin] Raw response:", text);
-
-//     // 🔒 Server returned nothing (500 with empty body)
-//     if (!text || text.trim() === "") {
-//       return {
-//         status: false,
-//         message: "Activation server returned empty response",
-//       };
-//     }
-
-//     // 🔒 Server returned something, but not JSON
-//     let data;
-//     try {
-//       data = JSON.parse(text);
-//     } catch (err) {
-//       console.error("[ActivateWithPin] JSON parse error:", err);
-//       return {
-//         status: false,
-//         message: "Invalid response from activation server",
-//       };
-//     }
-
-//     // Optional: handle non-200 explicitly
-//     if (!res.ok) {
-//       return {
-//         status: false,
-//         message: data.message || "Activation failed",
-//       };
-//     }
-
-//     console.log("[ActivateWithPin] Parsed response:", data);
-//     return data;
-
-//   } catch (err) {
-//     console.error("[ActivateWithPin] Network error:", err);
-//     return {
-//       status: false,
-//       message: "Network error: " + err.message,
-//     };
-//   }
-// });
-
-
+function saveActivationLocally(data) {
+  const filePath = path.join(app.getPath("userData"), "activation.json");
+  const existing = fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath)) : {};
+  const file = {
+    ...existing,
+    token: data.activationKey,
+    activatedAt: Date.now(),
+    expiresAt: data.expiresAt,
+    deviceId: data.deviceId,
+  };
+  fs.writeFileSync(filePath, JSON.stringify(file));
+}
 
 
 /* =========================

@@ -99,7 +99,7 @@ a.force-mobile-button {
 /* Shared styles for the boxes */
 .custom-box {
   padding: 20px;
-  height: 350px;
+  height: 400px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   flex: 1; /* Make the boxes take equal width */
@@ -152,7 +152,7 @@ a.force-mobile-button {
 
 .box-2 .btn-template {
   padding: 10px 20px;
-  background-color: #28a745; /* Green button */
+  background-color: #0366D6; /* Green button */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -177,7 +177,7 @@ a.force-mobile-button {
 
 .box-3 .btn-template {
   padding: 10px 20px;
-  background-color: #28a745; /* Green button */
+  background-color: #0366D6; /* Green button */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -1114,16 +1114,17 @@ body {
   display: flex;
   gap: 30px;
   margin-top: 20px;
+
 }
 
 /* LEFT — 60% */
 .practice-left {
-  flex: 3;
+  flex-basis: 70% !important;
 }
 
 /* RIGHT — 20% */
 .practice-rights {
-  flex: 1;
+  flex-basis: 30% !important;
 }
 
 /* FILTER CARD */
@@ -1773,15 +1774,15 @@ body {
 }
 
 /* LEFT */
-.practice-left {
+/* .practice-left {
   flex: 2;
-}
+} */
 
 .intro-box {
   background: #fff;
   padding: 20px;
   border-radius: 10px;
-  display: flex;
+
   gap: 15px;
   align-items: center;
 }
@@ -2072,6 +2073,131 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+/* SUBJECT ROW */
+.subject-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* DROPDOWN */
+.subject-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.subject-button {
+  width: 100%;
+  background: #cfe3ff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.subject-button:hover {
+  background: #bfd7ff;
+}
+/* HEADER ROW */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* BACK ARROW */
+.back-arrow-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-arrow-btn:hover {
+  background: #eef2ff;
+}
+
+/* SUBJECT + MIC ROW */
+.subject-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.chevron {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN MENU */
+.subject-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  z-index: 10;
+}
+
+.subject-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.subject-item:hover {
+  background: #f1f5f9;
+}
+
+.subject-item.active {
+  background: #eaf2ff;
+  font-weight: 600;
+}
+
+/* MICROPHONE BUTTON */
+.audio-btn {
+  width: 44px;
+  height: 44px;
+  background: #0b5ed7;
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.audio-btn:hover {
+  background: #094db3;
+}
+
+.audio-btn svg {
+  font-size: 16px;
+}
+
 
 /* ===== QUESTION PANEL ===== */
 .question-panel {
@@ -2277,6 +2403,72 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+
+/* SUBJECT DROPDOWN */
+.subject-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.subject-button {
+  width: 100%;
+  background: #cfe3ff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+.subject-button:hover {
+  background: #bfd7ff;
+}
+
+.chevron {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN MENU */
+.subject-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  z-index: 10;
+}
+
+/* DROPDOWN ITEM */
+.subject-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.subject-item:hover {
+  background: #f1f5f9;
+}
+
+.subject-item.active {
+  background: #eaf2ff;
+  font-weight: 600;
+}
+
 
 .practice-btn {
   border: 1px solid #ddd;

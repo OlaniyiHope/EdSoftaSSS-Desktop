@@ -5,18 +5,25 @@ import {
   FaPlay,
   FaPause,
   FaStop,
+  FaArrowLeft,
   FaHeadphones,
+  FaMicrophone
 } from "react-icons/fa";
 import "./admin.css";
+import { FaBookOpen } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+// OR
+import { FaBookOpenReader } from "react-icons/fa6";
 
 const StudyMat = () => {
   const [subjects, setSubjects] = useState([]);
   const [subject, setSubject] = useState("");
   const [topics, setTopics] = useState([]);
   const [activeTopic, setActiveTopic] = useState("");
+    const navigate = useNavigate();
   const [content, setContent] = useState("");
   const [playing, setPlaying] = useState(false);
-
+const [open, setOpen] = useState(false);
   /* =======================
      LOAD STUDY SUBJECTS
   ======================= */
@@ -91,35 +98,73 @@ const StudyMat = () => {
     <div className="study-layout">
       {/* LEFT */}
       <aside className="study-sidebar">
-        <div className="subject-dropdown">
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          >
-            {subjects.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-          <FaChevronDown />
-        </div>
+          <button
+      className="back-arrow-btn"
+      onClick={() => navigate("/")}
+      title="Go back"
+    >
+      <FaArrowLeft />
+    </button>
+<div className="subject-row">
+  {/* SUBJECT DROPDOWN */}
+  <div className="subject-wrapper">
+    <button
+      className="subject-button"
+      onClick={() => setOpen(!open)}
+    >
+      <span>{subject}</span>
+      <FaChevronDown className={`chevron ${open ? "rotate" : ""}`} />
+    </button>
 
-        <div className="topic-list">
-          {topics.map((file) => (
-            <div
-              key={file}
-              className={`topic-item ${
-                activeTopic === file ? "active" : ""
-              }`}
-              onClick={() => setActiveTopic(file)}
-            >
-              <FaBook />
-              <div>
-                <strong>{file}</strong>
-                <small>Study material</small>
-              </div>
-            </div>
-          ))}
-        </div>
+    {open && (
+      <div className="subject-menu">
+        {subjects.map((s) => (
+          <div
+            key={s}
+            className={`subject-item ${s === subject ? "active" : ""}`}
+            onClick={() => {
+              setSubject(s);
+              setOpen(false);
+            }}
+          >
+            {s}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+
+  {/* MIC BUTTON — SIBLING, NOT CHILD */}
+  <button
+    className="audio-btn"
+    title="Listen to material"
+    onClick={() => console.log("Play audio for", subject)}
+  >
+    <FaMicrophone />
+  </button>
+</div>
+
+<div className="topic-list">
+  {topics.map((file) => (
+    <div
+      key={file}
+      className={`topic-item ${
+        activeTopic === file ? "active" : ""
+      }`}
+      onClick={() => setActiveTopic(file)}
+    >
+      {/* ICON CONTAINER */}
+      <div className="topic-icon">
+        <FaBookOpen />
+      </div>
+
+      <div className="topic-text">
+        <strong>{file}</strong>
+      </div>
+    </div>
+  ))}
+</div>
+
       </aside>
 
       {/* MAIN */}

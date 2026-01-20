@@ -130,7 +130,7 @@ else {
             checked={state.enabled}
             onChange={() => toggleSubject(subject)}
           />
-          <span>{subject}</span>
+          <span style={{color: "black"}}>{subject}</span>
         </label>
 
         {state.enabled && (
@@ -180,7 +180,7 @@ else {
                   }))
                 }
               />
-              <span>Include Theory</span>
+              <span style={{color: "black"}}>Include Theory</span>
             </label>
 
             {/* SELECTED TOPICS */}
